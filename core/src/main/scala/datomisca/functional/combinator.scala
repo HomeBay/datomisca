@@ -17,8 +17,7 @@
 package datomisca
 package functional
 
-import scala.language.higherKinds
-import scala.language.implicitConversions
+import scala.language.{ higherKinds, implicitConversions }
 
 
 /**

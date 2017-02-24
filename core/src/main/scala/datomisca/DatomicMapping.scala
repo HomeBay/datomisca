@@ -16,11 +16,9 @@
 
 package datomisca
 
-import functional.CombinatorImplicits
+import datomisca.functional.CombinatorImplicits
 
-import scala.language.implicitConversions
-
-object DatomicMapping 
+object DatomicMapping
   extends CombinatorImplicits
 {
   def fromEntity[A](e: Entity)(implicit er: EntityReader[A]): A = er.read(e)

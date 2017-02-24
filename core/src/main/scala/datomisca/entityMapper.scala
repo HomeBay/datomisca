@@ -16,10 +16,10 @@
 
 package datomisca
 
+import datomisca.functional._
+
 import scala.annotation.implicitNotFound
 import scala.util.control.NonFatal
-
-import functional._
 
 
 sealed trait EntityMapper[A]

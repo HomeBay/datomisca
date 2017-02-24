@@ -18,7 +18,6 @@ package datomisca
 
 import org.scalatest.{FlatSpec, Matchers}
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 

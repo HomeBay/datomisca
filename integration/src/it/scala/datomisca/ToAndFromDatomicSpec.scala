@@ -16,8 +16,6 @@
 
 package datomisca
 
-import scala.language.reflectiveCalls
-
 import org.scalatest.{FlatSpec, Matchers}
 
 import Datomic.{toDatomic, fromDatomic}

@@ -16,8 +16,6 @@
 
 package datomisca
 
-import scala.language.reflectiveCalls
-
 
 /** The representation of Datomic attributes
   *

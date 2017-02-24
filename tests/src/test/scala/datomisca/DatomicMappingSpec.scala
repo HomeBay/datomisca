@@ -19,7 +19,6 @@ package datomisca
 import DatomicMapping._
 
 import scala.language.reflectiveCalls
-
 import org.specs2.mutable._
 
 import scala.concurrent._
@@ -222,7 +221,6 @@ class DatomicMappingSpec extends Specification {
     }
 
     "get entity fields from attributes" in {
-      import scala.util.{Try, Success, Failure}
 
       implicit val conn = Datomic.connect(uri)
 

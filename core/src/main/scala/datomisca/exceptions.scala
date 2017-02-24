@@ -16,7 +16,7 @@
 
 package datomisca
 
-import clojure.{lang => clj}
+import clojure.{ lang ⇒ clj }
 
 
 class DatomiscaException(message: String, cause: Throwable) extends RuntimeException(message, cause) {

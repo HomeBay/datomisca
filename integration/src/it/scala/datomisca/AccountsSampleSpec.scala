@@ -16,7 +16,7 @@
 
 package datomisca
 
-import org.scalatest.{FlatSpec, Matchers}
+import org.scalatest.{ FlatSpec, Matchers }
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -161,9 +161,8 @@ class AccountsSampleSpec
 
 
   "Accounts Sample" should "run to completion" in withDatomicDB { implicit conn =>
-    import AccountsSchema.{name, from, to}
     import AccountsQueries._
-    import AccountsTxData.{transfer, credit}
+    import AccountsTxData.transfer
 
     await {
       Datomic.transact(AccountsSchema.schema)

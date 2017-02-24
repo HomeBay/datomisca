@@ -16,12 +16,12 @@
 
 package datomisca
 
-import scala.collection.breakOut
-import scala.collection.JavaConverters._
-import scala.concurrent.duration._
+import java.util.{ concurrent ⇒ juc }
+import java.{ util ⇒ ju }
 
-import java.{util => ju}
-import java.util.{concurrent => juc}
+import scala.collection.JavaConverters._
+import scala.collection.breakOut
+import scala.concurrent.duration._
 
 
 /** The data queue associated with a connection.

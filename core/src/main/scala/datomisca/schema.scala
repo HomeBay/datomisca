@@ -16,10 +16,10 @@
 
 package datomisca
 
-import java.{lang => jl}
-import java.math.{BigInteger => JBigInt, BigDecimal => JBigDecimal}
-import java.util.{Date, UUID}
+import java.math.{ BigDecimal ⇒ JBigDecimal, BigInteger ⇒ JBigInt }
 import java.net.URI
+import java.util.{ Date, UUID }
+import java.{ lang ⇒ jl }
 
 
 object DatomicRef

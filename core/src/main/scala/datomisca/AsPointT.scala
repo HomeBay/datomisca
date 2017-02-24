@@ -16,9 +16,9 @@
 
 package datomisca
 
-import scala.annotation.implicitNotFound
+import java.util.{ Date ⇒ JDate }
 
-import java.util.{Date => JDate}
+import scala.annotation.implicitNotFound
 
 
 /** A conversion type class for point in time values.

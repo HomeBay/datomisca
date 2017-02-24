@@ -19,7 +19,7 @@ package datomisca
 
 
 class TxReport(rawReport: java.util.Map[_, _]) {
-  import datomic.Connection.{DB_BEFORE, DB_AFTER, TX_DATA, TEMPIDS}
+  import datomic.Connection.{ DB_AFTER, DB_BEFORE, TEMPIDS, TX_DATA }
   import datomic.db.Db
 
   def dbBefore: Database =

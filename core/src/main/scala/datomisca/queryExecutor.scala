@@ -16,10 +16,10 @@
 
 package datomisca
 
+import java.{ util ⇒ ju }
+
 import scala.concurrent.blocking
 import scala.util.control.NonFatal
-
-import java.{util => ju}
 
 
 class QueryProcessingException(rootCause: Throwable, chain: Seq[String])

@@ -16,7 +16,7 @@
 
 package datomisca
 
-import scala.concurrent.{Future, ExecutionContext}
+import scala.concurrent.{ ExecutionContext, Future }
 
 
 /** Provides all Datomic Database Transactor asynchronous function.

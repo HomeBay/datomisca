@@ -16,7 +16,7 @@
 
 package datomisca
 
-import java.{util => ju}
+import java.{ util ⇒ ju }
 
 
 object SchemaEntity {
