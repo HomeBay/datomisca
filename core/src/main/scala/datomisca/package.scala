@@ -233,8 +233,6 @@ package object datomisca {
       * implicit ensures that it is a valid pairing with the
       * Datomic data type specified by the attribute.
       *
-      * @param  default  a computation that yields a default value
-      *     in case the attribute is not found in the entity.
       * @return an entity reader that optionally reads entities with this attribute.
       * @see [[EntityReader]]
       */

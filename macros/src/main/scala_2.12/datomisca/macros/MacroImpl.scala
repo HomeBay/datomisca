@@ -17,13 +17,12 @@
 package datomisca
 package macros
 
-import scala.reflect.macros.whitebox.Context
-
 import scala.collection.JavaConverters._
 import scala.collection.mutable
-
 import clojure.lang.Keyword
-import clojure.{lang => clj}
+import clojure.{ lang ⇒ clj }
+
+import scala.reflect.macros.whitebox
 
 
 private[datomisca] object MacroImpl {
@@ -37,15 +36,15 @@ private[datomisca] object MacroImpl {
   }
 
 
-  private def abortWithMessage(c: Context, message: String) =
+  private def abortWithMessage(c: whitebox.Context, message: String) =
     c.abort(c.enclosingPosition, message)
 
 
-  private def abortWithThrowable(c: Context, throwable: Throwable) =
+  private def abortWithThrowable(c: whitebox.Context, throwable: Throwable) =
     c.abort(c.enclosingPosition, throwable.getMessage)
 
 
-  private def readEDN(c: Context, edn: String): AnyRef =
+  private def readEDN(c: whitebox.Context, edn: String): AnyRef =
     try {
       withClojure { datomic.Util.read(edn) }
     } catch {
@@ -54,7 +53,7 @@ private[datomisca] object MacroImpl {
     }
 
 
-  def KWImpl(c: Context)(str: c.Expr[String]): c.Expr[Keyword] = {
+  def KWImpl(c: whitebox.Context)(str: c.Expr[String]): c.Expr[Keyword] = {
     import c.universe._
 
     str.tree match {
@@ -72,7 +71,7 @@ private[datomisca] object MacroImpl {
   }
 
 
-  def cljRulesImpl(c: Context)(edn: c.Expr[String]): c.Expr[QueryRules] = {
+  def cljRulesImpl(c: whitebox.Context)(edn: c.Expr[String]): c.Expr[QueryRules] = {
     import c.universe._
 
     edn.tree match {
@@ -87,7 +86,7 @@ private[datomisca] object MacroImpl {
         val strWithPlaceHolders = c.eval(c.Expr[String](c.untypecheck(partsWithPlaceholders.duplicate)))
         val edn = readEDN(c, strWithPlaceHolders)
         validateCljRules(c, edn)
-        val argsStack = mutable.Stack.concat(args)
+        val argsStack = args.toList
         val helper = new Helper[c.type](c)
         helper.literalQueryRules(helper.literalEDN(edn, argsStack))
 
@@ -97,7 +96,7 @@ private[datomisca] object MacroImpl {
   }
 
 
-  private def validateCljRules(c: Context, edn: AnyRef): Unit =
+  private def validateCljRules(c: whitebox.Context, edn: AnyRef): Unit =
     edn match {
       case vector: clj.PersistentVector =>
         vector.iterator.asScala foreach {
@@ -120,7 +119,7 @@ private[datomisca] object MacroImpl {
     }
 
 
-  def cljQueryImpl(c: Context)(edn: c.Expr[String]): c.Expr[AbstractQuery] = {
+  def cljQueryImpl(c: whitebox.Context)(edn: c.Expr[String]): c.Expr[AbstractQuery] = {
     import c.universe._
 
     edn.tree match {
@@ -135,7 +134,7 @@ private[datomisca] object MacroImpl {
         val partsWithPlaceholders = q"""Seq(..$parts).mkString(" ! ")"""
         val strWithPlaceHolders = c.eval(c.Expr[String](c.untypecheck(partsWithPlaceholders.duplicate)))
         val edn = readEDN(c, strWithPlaceHolders)
-        val argsStack = mutable.Stack.concat(args)
+        val argsStack = args.toList
         val (query, inputSize, outputSize) = validateDatalog(c, edn)
         val helper = new Helper[c.type](c)
         val t = helper.literalEDN(query, argsStack)
@@ -147,7 +146,7 @@ private[datomisca] object MacroImpl {
   }
 
 
-  private def validateDatalog(c: Context, edn: AnyRef): (AnyRef, Int, Int) = {
+  private def validateDatalog(c: whitebox.Context, edn: AnyRef): (AnyRef, Int, Int) = {
     val query = edn match {
       case coll: clj.IPersistentMap =>
         coll
@@ -173,7 +172,7 @@ private[datomisca] object MacroImpl {
   }
 
 
-  private def transformQuery(c: Context, iter: Iterator[AnyRef]): clj.IPersistentMap = {
+  private def transformQuery(c: whitebox.Context, iter: Iterator[AnyRef]): clj.IPersistentMap = {
     def isQueryKeyword(kw: clj.Keyword): Boolean = {
       val name = kw.getName
       (name == "find") || (name == "with") || (name == "in") || (name == "where")

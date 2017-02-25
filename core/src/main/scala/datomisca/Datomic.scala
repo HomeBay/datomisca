@@ -94,7 +94,7 @@ private[datomisca] trait DatomicFacilities {
     * """)
     * }}}
     *
-    * @param q the Clojure string
+    * @param ops the Clojure string
     * @return a sequence of operations or an error
     */
   def parseOps(ops: String): Try[Seq[TxData]] = Try {

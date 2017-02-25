@@ -16,9 +16,8 @@
 
 package datomisca.executioncontext
 
-import java.util.concurrent.{ ForkJoinPool ⇒ _, ForkJoinTask ⇒ _, ForkJoinWorkerThread ⇒ _, _ }
+import java.util.concurrent._
 
-import scala.concurrent.forkjoin._
 import scala.concurrent.{ BlockContext, CanAwait, ExecutionContextExecutor }
 import scala.util.control.NonFatal
 

@@ -32,7 +32,7 @@ abstract class AbstractQuery(val query: clojure.lang.IPersistentMap) {
 
 /** A wrapper for Datalog rules represented as a Clojure vector.
   *
-  * @param query the rules as Clojure data.
+  * @param edn the rules as Clojure data.
   */
 final class QueryRules(val edn: clojure.lang.PersistentVector) extends AnyVal {
   override def toString = edn.toString

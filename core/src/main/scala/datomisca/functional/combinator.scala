@@ -53,7 +53,7 @@ trait Combinator[M[_]] {
 
 class CombinatorOps[M[_], A](ma: M[A])(implicit combi: Combinator[M]) {
   def ~[B](mb: M[B]) = {
-    val builder = new Builder(combi)
+    val builder: Builder[M] = new Builder(combi)
     new builder.Builder2(ma, mb)
   }
   def and[B](mb: M[B]) = this.~(mb)

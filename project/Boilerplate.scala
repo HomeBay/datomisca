@@ -49,24 +49,24 @@ object Boilerplate {
   }
 
   def genHeader = {
-    ("""|/*
-        | * Copyright 2012 Pellucid and Zenexity
-        | *
-        | * Licensed under the Apache License, Version 2.0 (the "License");
-        | * you may not use this file except in compliance with the License.
-        | * You may obtain a copy of the License at
-        | *
-        | *   http://www.apache.org/licenses/LICENSE-2.0
-        | *
-        | * Unless required by applicable law or agreed to in writing, software
-        | * distributed under the License is distributed on an "AS IS" BASIS,
-        | * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-        | * See the License for the specific language governing permissions and
-        | * limitations under the License.
-        | */
-        |
-        |package datomisca
-        |""").stripMargin
+    """|/*
+       | * Copyright 2012 Pellucid and Zenexity
+       | *
+       | * Licensed under the Apache License, Version 2.0 (the "License");
+       | * you may not use this file except in compliance with the License.
+       | * You may obtain a copy of the License at
+       | *
+       | *   http://www.apache.org/licenses/LICENSE-2.0
+       | *
+       | * Unless required by applicable law or agreed to in writing, software
+       | * distributed under the License is distributed on an "AS IS" BASIS,
+       | * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       | * See the License for the specific language governing permissions and
+       | * limitations under the License.
+       | */
+       |
+       |package datomisca
+       |""".stripMargin
   }
 
   def genTypedQueries = {
@@ -237,7 +237,7 @@ object Boilerplate {
     }
 
     def genInstance(arity: Int) = {
-      val typeList = ((1 to arity) map (n => "A"+n)) // A1 A2 ... An
+      val typeList = (1 to arity) map (n => "A" + n) // A1 A2 ... An
       val typeListDec = typeList.init // A1 A2 ... An-1
       val typeParams = typeList.mkString("[", ", ", "]") // [A1, A2, ... An]
       val typeParamsInc = ((1 to (arity+1)) map (n => "A"+n)).mkString("[", ", ", "]") // [A1, A2, ... An+1]
@@ -245,26 +245,26 @@ object Boilerplate {
       val combDec = typeListDec.mkString("[", " ~ ", "]") // [A1 ~ A2 ~ ... An-1]
       val params = typeList.mkString("(", ", ", ")") // (A1, A2, ... An)
       val typeParamInc = "[A"+(arity+1)+"]" // [An+1]
-      val valList = ((1 to arity) map (n => "a"+n)) // a1 a2 ... an
+      val valList = (1 to arity) map (n => "a" + n) // a1 a2 ... an
       val combVals = valList.mkString(" ~ ") // a1 ~ a2 ~ ... an
       val parenVals = valList.mkString("(", ", ", ")") // (a1, a2, ... an)
       val valsWithTypes = ((1 to arity) map (n => "a"+n+": A"+n)).mkString("(", ", ", ")") // (a1: A1, a2: A2, ... an: A2)
       val valsWithIdx = ((1 to arity) map (n => "a._"+n)).mkString("(", ", ", ")") // (a._1, a._2, ... a._n)
 
       s"""|
-          |  class Builder${arity}${typeParams}(m1: M$combDec, m2:M[A$arity]) {
-          |    def ~${typeParamInc}(m3: M${typeParamInc}) = new Builder${arity+1}${typeParamsInc}(combi(m1, m2), m3)
-          |    def and${typeParamInc}(m3: M${typeParamInc}) = this.~(m3)
+          |  class Builder$arity$typeParams(m1: M$combDec, m2:M[A$arity]) {
+          |    def ~$typeParamInc(m3: M$typeParamInc) = new Builder${arity+1}$typeParamsInc(combi(m1, m2), m3)
+          |    def and$typeParamInc(m3: M$typeParamInc) = this.~(m3)
           |
-          |    def apply[B](f: ${params} => B)(implicit functor: Functor[M]): M[B] =
-          |      functor.fmap[${combParams}, B](combi(m1, m2), { case $combVals => f${parenVals} })
+          |    def apply[B](f: $params => B)(implicit functor: Functor[M]): M[B] =
+          |      functor.fmap[$combParams, B](combi(m1, m2), { case $combVals => f$parenVals })
           |
-          |    def apply[B](f: B => ${params})(implicit functor: ContraFunctor[M]): M[B] =
-          |      functor.contramap[${combParams}, B](combi(m1, m2), { (b: B) => f(b) match { case $parenVals => ${genNesting(arity)} } })
+          |    def apply[B](f: B => $params)(implicit functor: ContraFunctor[M]): M[B] =
+          |      functor.contramap[$combParams, B](combi(m1, m2), { (b: B) => f(b) match { case $parenVals => ${genNesting(arity)} } })
           |
-          |    def tupled(implicit v: Variant[M]): M[${params}] = (v: @unchecked) match {
-          |      case f: Functor[M] => apply(${valsWithTypes} => ${parenVals})(f)
-          |      case f: ContraFunctor[M] => apply((a: ${params}) => ${valsWithIdx})(f)
+          |    def tupled(implicit v: Variant[M]): M[$params] = (v: @unchecked) match {
+          |      case f: Functor[M] => apply($valsWithTypes => $parenVals)(f)
+          |      case f: ContraFunctor[M] => apply((a: $params) => $valsWithIdx)(f)
           |    }
           |  }
           |""".stripMargin

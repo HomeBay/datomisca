@@ -28,7 +28,7 @@ apiMappings += {
   val jarFiles = (dependencyClasspath in Compile).value.files
   def findJarFile(s: String) = jarFiles.find(file => file.toString.contains(s)).get
   val datomicJarFile = findJarFile("com.datomic/datomic-free")
-  (datomicJarFile -> url("http://docs.datomic.com/javadoc/"))
+  datomicJarFile -> url("http://docs.datomic.com/javadoc/")
 }
 
 lazy val transformJavaDocLinksTask = taskKey[Unit](
