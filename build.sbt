@@ -15,7 +15,7 @@ scalacOptions in ThisBuild ++= Seq(
     "-encoding", "UTF-8",
     "-feature",
     "-unchecked",
-//    "-Xfatal-warnings",
+    "-Xfatal-warnings",
     "-Xfuture",
     "-Xlint",
     "-Yno-adapted-args",
@@ -77,9 +77,9 @@ aggregate in PgpKeys.publishLocalSigned := false
 lazy val macros = project in file("macros")
 
 // map macros project classes and sources into root project
-mappings in (Compile, packageBin) <++= mappings in (macros, Compile, packageBin)
+mappings in (Compile, packageBin) ++= (mappings in (macros, Compile, packageBin)).value
 
-mappings in (Compile, packageSrc) <++= mappings in (macros, Compile, packageSrc)
+mappings in (Compile, packageSrc) ++= (mappings in (macros, Compile, packageSrc)).value
 
 
 lazy val core = project.
@@ -87,9 +87,9 @@ lazy val core = project.
   dependsOn(macros)
 
 // map core project classes and sources into root project
-mappings in (Compile, packageBin) <++= mappings in (core, Compile, packageBin)
+mappings in (Compile, packageBin) ++= (mappings in (core, Compile, packageBin)).value
 
-mappings in (Compile, packageSrc) <++= mappings in (core, Compile, packageSrc)
+mappings in (Compile, packageSrc) ++= (mappings in (core, Compile, packageSrc)).value
 
 
 lazy val tests = project.

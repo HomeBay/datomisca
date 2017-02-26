@@ -104,7 +104,7 @@ class DatomicDemoSpec extends Specification {
                       [ ?e :person/age ?a ]
                       [ (<= ?a ?age) ]
             ]
-          """), Datomic.database, 40).map{
+          """), Datomic.database, 40).collect{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
               val entity = Datomic.database.entity(id)
@@ -120,7 +120,7 @@ class DatomicDemoSpec extends Specification {
                       [ ?e :person/age ?a ]
                       [ (not= ?a ?age) ]
             ]
-          """), Datomic.database, 35).map{
+          """), Datomic.database, 35).collect{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
               val entity = Datomic.database.entity(id)
@@ -136,7 +136,7 @@ class DatomicDemoSpec extends Specification {
                       [ ?e :person/age ?a ]
                       [ (== ?a ?age) ]
             ]
-          """), Datomic.database, 35L).map{
+          """), Datomic.database, 35L).collect{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
               val entity = Datomic.database.entity(id)

@@ -58,7 +58,7 @@ class DatomicQuery2Spec extends Specification {
         ]
       """)
 
-      Datomic.q(
+      val result = Datomic.q(
         query,
         Datomic.database,
         Datomic.KW(":person.character/violent")
@@ -66,6 +66,7 @@ class DatomicQuery2Spec extends Specification {
         case (e: Long, n: String) =>
           val entity = Datomic.database.entity(e)
           println(s"1 - entity: $e name: $n - e: ${entity.get(person / "character")}")
+        case _ ⇒ failure("wrong result shape from datomic")
       }
 
       success
@@ -83,6 +84,7 @@ class DatomicQuery2Spec extends Specification {
         case e: Long =>
           val entity = Datomic.database.entity(e)
           println(s"2 - entity: $e name: ${entity.get(person / "name")} - e: ${entity.get(person / "character")}")
+        case _ ⇒ failure("wrong result shape from datomic")
       }
 
       success
@@ -102,6 +104,7 @@ class DatomicQuery2Spec extends Specification {
         case e: Long =>
           val entity = Datomic.database.entity(e)
           println(s"3 - entity: $e name: ${entity.get(person / "name")} - e: ${entity.get(person / "character")}")
+        case _ ⇒ failure("wrong result shape from datomic")
       }
 
       success
@@ -128,6 +131,7 @@ class DatomicQuery2Spec extends Specification {
       ) map {
         case (e: Long, n: String, a: Long) =>
           println(s"4 - entity: $e name: $n - age: $a")
+        case _ ⇒ failure("wrong result shape from datomic")
       }
 
       success
@@ -146,6 +150,7 @@ class DatomicQuery2Spec extends Specification {
       Datomic.q(q, Datomic.database) map {
         case (e: Long, n: String) =>
           println(s"5 - entity: $e name: $n")
+        case _ ⇒ failure("wrong result shape from datomic")
       }
 
       success
@@ -173,6 +178,7 @@ class DatomicQuery2Spec extends Specification {
         case (e: Long, age: Long) =>
           println(s"e: $e - age: $age")
           age must beEqualTo(30L)
+        case _ ⇒ failure("wrong result shape from datomic")
       }
 
       success
@@ -194,6 +200,7 @@ class DatomicQuery2Spec extends Specification {
         case (e: Long, name: String) =>
           println(s"e: $e - name: $name")
           name must beEqualTo("tutu")
+        case _ ⇒ failure("wrong result shape from datomic")
       }
 
       success
@@ -223,8 +230,8 @@ class DatomicQuery2Spec extends Specification {
            val result = Datomic.q(query2, Datomic.database,e) 
            result must not be empty
            println(result)
-        
         }
+        case _ ⇒ failure("wrong result shape from datomic")
       } should  not (throwA[UnsupportedDatomicTypeException])
      
     }
