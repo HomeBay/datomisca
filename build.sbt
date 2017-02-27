@@ -4,7 +4,7 @@ import com.typesafe.sbt.SbtGhPages.GhPagesKeys._
 
 organization in ThisBuild := "llc.flyingwalrus"
 licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
-scalaVersion in ThisBuild := "2.11.8"
+scalaVersion in ThisBuild := "2.12.1"
 crossScalaVersions in ThisBuild := Seq("2.11.8", "2.12.1")
 
 val compilerOptions = Seq(
@@ -133,8 +133,8 @@ val noPublishSettings = Seq(
   publishArtifact := false
 )
 
-def datomic = "com.datomic" % "datomic-free" % "0.9.5544" % Provided
-def specs2 = "org.specs2" %% "specs2" % "2.4.17" % Test
+def datomic = "com.datomic" % "datomic-free" % "0.9.5561" % Provided
+def specs2 = "org.specs2" %% "specs2-core" % "3.8.8" % Test
 def scalatest = "org.scalatest" %% "scalatest" % "3.0.1" % "it"
 def xmlModule = "org.scala-lang.modules" %% "scala-xml" % "1.0.6"
 def paradise = "org.scalamacros" % "paradise" % "2.1.0" cross CrossVersion.full
