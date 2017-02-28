@@ -59,6 +59,7 @@ lazy val integrationTests = project.in(file("integration")).
   configs(IntegrationTest)
 
 lazy val core = project.in(file("core")).
+  settings(noPublishSettings).
   settings(
     name := "datomisca-core",
     libraryDependencies += datomic,
@@ -67,6 +68,7 @@ lazy val core = project.in(file("core")).
   dependsOn(macros)
 
 lazy val macros = project.in(file("macros")).
+  settings(noPublishSettings).
   settings(
     name := "datomisca-macros",
     addCompilerPlugin(paradise),
@@ -124,8 +126,11 @@ val docSettings = baseSettings ++ Seq(
   includeFilter in makeSite := "*.html" | "*.css" | "*.png" | "*.jpg" | "*.gif" | "*.svg" | "*.js" | "*.swf" | "*.yml" | "*.md"
 )
 
-val publishSettings = Seq(  
-)
+mappings in (Compile, packageBin) ++= (mappings in (macros, Compile, packageBin)).value
+mappings in (Compile, packageSrc) ++= (mappings in (macros, Compile, packageSrc)).value
+
+mappings in (Compile, packageBin) ++= (mappings in (core, Compile, packageBin)).value
+mappings in (Compile, packageSrc) ++= (mappings in (core, Compile, packageSrc)).value
 
 val noPublishSettings = Seq(
   publish := (),
