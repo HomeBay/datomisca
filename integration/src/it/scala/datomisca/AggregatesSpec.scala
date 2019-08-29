@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
 
 
@@ -26,82 +28,82 @@ class AggregatesSpec
      with DatomicFixture
 {
 
-  val countObjects = Query("""
+  val countObjects = query"""
     [:find (count ?e)
      :where [?e :object/name ?n]]
-  """)
+  """
 
-  val findLargestRadius = Query("""
+  val findLargestRadius = query"""
     [:find (max ?radius)
      :where [_ :object/meanRadius ?radius]]
-  """)
+  """
 
-  val findSmallestRadius = Query("""
+  val findSmallestRadius = query"""
     [:find (min ?radius)
      :where [_ :object/meanRadius ?radius]]
-  """)
+  """
 
-  val findAverageRadius = Query("""
+  val findAverageRadius = query"""
     [:find (avg ?radius)
      :with ?e
      :where [?e :object/meanRadius ?radius]]
-  """)
+  """
 
-  val findMedianRadius = Query("""
+  val findMedianRadius = query"""
     [:find (median ?radius)
      :with ?e
      :where [?e :object/meanRadius ?radius]]
-  """)
+  """
 
-  val findStdDevOfRadius = Query("""
+  val findStdDevOfRadius = query"""
     [:find (stddev ?radius)
      :with ?e
      :where [?e :object/meanRadius ?radius]]
-  """)
+  """
 
-  val findRandomObject = Query("""
+  val findRandomObject = query"""
     [:find (rand ?name)
      :where [?e :object/name ?name]]
-  """)
+  """
 
-  val findSmallest3 = Query("""
+  val findSmallest3 = query"""
     [:find (min 3 ?radius)
      :with ?e
      :where [?e :object/meanRadius ?radius]]
-  """)
+  """
 
-  val findLargest3 = Query("""
+  val findLargest3 = query"""
     [:find (max 3 ?radius)
      :with ?e
      :where [?e :object/meanRadius ?radius]]
-  """)
+  """
 
-  val findRandom5 = Query("""
+  val findRandom5 = query"""
     [:find (rand 5 ?name)
      :with ?e
      :where [?e :object/name ?name]]
-  """)
+  """
 
-  val choose5 = Query("""
+  val choose5 = query"""
     [:find (sample 5 ?name)
      :with ?e
      :where [?e :object/name ?name]]
-  """)
+  """
 
-  val findAvgObjectNameLength = Query("""
+  val findAvgObjectNameLength = query"""
     [:find (avg ?length)
      :with ?e
      :where
      [?e :object/name ?name]
      [(count ?name) ?length]]
-  """)
+  """
 
-  val countAttributesAndValueTypesInSchema = Query("""
+  val countAttributesAndValueTypesInSchema = query"""
     [:find (count ?a) (count-distinct ?vt)
      :where
      [?a :db/ident ?ident]
      [?a :db/valueType ?vt]]
-  """)
+  """
 
   "Aggregates examples" should "run to completion" in withSampleDatomicDB(PlutoSampleData) { conn =>
     val db = conn.database()

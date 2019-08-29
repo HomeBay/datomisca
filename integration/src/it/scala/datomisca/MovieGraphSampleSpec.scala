@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.Future
@@ -127,33 +129,33 @@ class MovieGraphSampleSpec
   object MovieGraphQueries {
     import MovieGraphSchema._
 
-    val queryFindMovieByTitle = Query(s"""
+    val queryFindMovieByTitle = query"""
       [:find ?title ?year
        :in $$ ?title
        :where
          [?movie ${movieTitle} ?title]
          [?movie ${movieYear}  ?year]]
-    """)
+    """
 
-    val queryFindMovieByTitlePrefix = Query(s"""
+    val queryFindMovieByTitlePrefix = query"""
       [:find ?title ?year
        :in $$ ?prefix
        :where
          [?movie ${movieTitle} ?title]
          [?movie ${movieYear}  ?year]
          [(.startsWith ^String ?title  ?prefix)]]
-    """)
+    """
 
-    val queryFindActorsInTitle = Query(s"""
+    val queryFindActorsInTitle = query"""
       [:find ?name
        :in $$ ?title
        :where
          [?movie ${movieTitle} ?title]
          [?actor ${actorActs}  ?movie]
          [?actor ${actorName}  ?name]]
-    """)
+    """
 
-    val queryFindTitlesAndRolesForActor = Query(s"""
+    val queryFindTitlesAndRolesForActor = query"""
       [:find ?role ?title
        :in $$ ?name
        :where
@@ -161,9 +163,9 @@ class MovieGraphSampleSpec
          [?actor ${actorActs}  ?movie ?tx]
          [?movie ${movieTitle} ?title]
          [?tx    ${actorRole}  ?role]]
-    """)
+    """
 
-    val queryFindMoviesThatIncludeActorsInGivenMovie = Query(s"""
+    val queryFindMoviesThatIncludeActorsInGivenMovie = query"""
       [:find ?othertitle
        :in $$ ?title
        :where
@@ -171,16 +173,16 @@ class MovieGraphSampleSpec
          [?actor ${actorActs}  ?movie]
          [?actor ${actorActs}  ?othermovie]
          [?othermovie ${movieTitle} ?othertitle]]
-    """)
+    """
 
-    val queryFindAllMoviesWithRole = Query(s"""
+    val queryFindAllMoviesWithRole = query"""
       [:find ?title
        :in $$ ?role
        :where
          [?tx    ${actorRole}  ?role]
          [?actor ${actorActs}  ?movie ?tx]
          [?movie ${movieTitle} ?title]]
-    """)
+    """
 
   }
 

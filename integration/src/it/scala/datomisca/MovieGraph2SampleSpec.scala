@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.Future
@@ -141,24 +143,24 @@ class MovieGraph2SampleSpec
   object MovieGraph2Queries {
     import MovieGraph2Schema._
 
-    val queryFindMovieByTitle = Query(s"""
+    val queryFindMovieByTitle = query"""
       [:find ?title ?year
        :in $$ ?title
        :where
          [?movie ${movieTitle} ?title]
          [?movie ${movieYear}  ?year]]
-    """)
+    """
 
-    val queryFindMovieByTitlePrefix = Query(s"""
+    val queryFindMovieByTitlePrefix = query"""
       [:find ?title ?year
        :in $$ ?prefix
        :where
          [?movie ${movieTitle} ?title]
          [?movie ${movieYear}  ?year]
          [(.startsWith ^String ?title  ?prefix)]]
-    """)
+    """
 
-    val queryFindActorsInTitle = Query(s"""
+    val queryFindActorsInTitle = query"""
       [:find ?name
        :in $$ ?title
        :where
@@ -166,9 +168,9 @@ class MovieGraph2SampleSpec
          [?role  ${movieForRole} ?movie]
          [?role  ${actorForRole} ?actor]
          [?actor ${actorName}    ?name]]
-    """)
+    """
 
-    val queryFindTitlesAndRolesForActor = Query(s"""
+    val queryFindTitlesAndRolesForActor = query"""
       [:find ?role ?title
        :in $$ ?name
        :where
@@ -177,9 +179,9 @@ class MovieGraph2SampleSpec
          [?role  ${character}    ?character]
          [?role  ${movieForRole} ?movie]
          [?movie ${movieTitle}   ?title]]
-    """)
+    """
 
-    val queryFindMoviesThatIncludeActorsInGivenMovie = Query(s"""
+    val queryFindMoviesThatIncludeActorsInGivenMovie = query"""
       [:find ?othertitle
        :in $$ ?title
        :where
@@ -189,16 +191,16 @@ class MovieGraph2SampleSpec
          [?role2  ${actorForRole} ?actor]
          [?role2  ${movieForRole} ?movie2]
          [?movie2 ${movieTitle}   ?othertitle]]
-    """)
+    """
 
-    val queryFindAllMoviesWithRole = Query(s"""
+    val queryFindAllMoviesWithRole = query"""
       [:find ?title
        :in $$ ?character
        :where
          [?role  ${character}    ?character]
          [?role  ${movieForRole} ?movie]
          [?movie ${movieTitle}   ?title]]
-    """)
+    """
 
   }
 

@@ -17,10 +17,7 @@
 package datomisca
 package macros
 
-import scala.language.experimental.macros
-
 import clojure.lang.Keyword
-
 
 private[datomisca] trait ExtraMacros {
   /** Parse the string representation of a Clojure keyword into a [[Keyword]] object.

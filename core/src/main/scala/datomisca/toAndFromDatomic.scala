@@ -243,7 +243,7 @@ trait ToDatomicImplicits {
   implicit val JBigDec2DBigDec  = ToDatomic[JBigDecimal,  JBigDecimal](identity)
 
 
-  implicit def DColl2SetWrites[C, A](implicit ev: C <:< Traversable[A], conv: ToDatomicCast[A]) = new ToDatomic[ju.List[AnyRef], C] {
+  implicit def DColl2SetWrites[C, A](implicit ev: C <:< Iterable[A], conv: ToDatomicCast[A]) = new ToDatomic[ju.List[AnyRef], C] {
     override def to(c: C) = {
       val builder = Seq.newBuilder[AnyRef]
       for (e <- c) builder += conv.to(e)

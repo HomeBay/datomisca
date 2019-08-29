@@ -65,7 +65,7 @@ object Attribute2PartialAddEntityWriter {
     * for a cardinality many attribute with value type `DD` as
     * a list of its corresponding Datomic type `DD`.
     */
-  implicit def manyValues[DD <: AnyRef, Coll, T](implicit ev: Coll <:< Traversable[T], conv: ToDatomic[DD, T]) =
+  implicit def manyValues[DD <: AnyRef, Coll, T](implicit ev: Coll <:< Iterable[T], conv: ToDatomic[DD, T]) =
     new Attribute2PartialAddEntityWriter[DD, Cardinality.many.type, Coll] {
       override def convert(attr: Attribute[DD, Cardinality.many.type]) = new PartialAddEntityWriter[Coll] {
         override def write(c: Coll) =
@@ -97,7 +97,7 @@ object Attribute2PartialAddEntityWriter {
     * then we can write a value of type `Coll`
     * as a list of entity ids for a cardinality many reference attribute.
     */
-  implicit def manyRefs[Coll, T](implicit ev: Coll <:< Traversable[T], conv: AsDatomicRef[T]) =
+  implicit def manyRefs[Coll, T](implicit ev: Coll <:< Iterable[T], conv: AsDatomicRef[T]) =
     new Attribute2PartialAddEntityWriter[DatomicRef.type, Cardinality.many.type, Coll] {
       override def convert(attr: Attribute[DatomicRef.type, Cardinality.many.type]) = new PartialAddEntityWriter[Coll] {
         override def write(c: Coll) =
@@ -129,7 +129,7 @@ object Attribute2PartialAddEntityWriter {
     * then we can write a value of type `Coll`
     * as a list of entity ids for a cardinality many reference attribute.
     */
-  implicit def manyIdViews[Coll, T](implicit witness: Coll <:< Traversable[IdView[T]]) =
+  implicit def manyIdViews[Coll, T](implicit witness: Coll <:< Iterable[IdView[T]]) =
     new Attribute2PartialAddEntityWriter[DatomicRef.type, Cardinality.many.type, Coll] {
       override def convert(attr: Attribute[DatomicRef.type, Cardinality.many.type]) = new PartialAddEntityWriter[Coll] {
         override def write(c: Coll) =

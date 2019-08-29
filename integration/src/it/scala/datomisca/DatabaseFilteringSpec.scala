@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
@@ -29,10 +31,10 @@ class DatabaseFilteringSpec
      with AwaitHelper
 {
 
-  val countStories = Query("""
+  val countStories = query"""
     [:find (count ?e)
      :where [?e :story/url]]
-  """)
+  """
 
 
   "Database filtering example" should "run to completion" in withSampleDatomicDB(SocialNewsSampleData) { conn =>

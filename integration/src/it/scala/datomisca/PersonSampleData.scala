@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import scala.language.reflectiveCalls
 
 
@@ -99,9 +101,9 @@ object PersonSampleData extends SampleData {
     totoTxData, tutuTxData, tataTxData
   )
 
-  val queryPersonIdByName = Query(s"""
+  val queryPersonIdByName = query"""
     [:find ?e
      :in $$ ?name
      :where [?e ${nameAttr} ?name]]
-  """)
+  """
 }

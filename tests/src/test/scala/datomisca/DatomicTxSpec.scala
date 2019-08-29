@@ -16,6 +16,7 @@
 
 package datomisca
 
+import Queries._
 import DatomicMapping._
 
 import org.specs2.mutable._
@@ -154,12 +155,12 @@ class DatomicTxSpec extends Specification {
         ) map { tx => 
           println(s"Provisioned more data... TX: $tx")
 
-          Datomic.q(Query("""
+          Datomic.q(query"""
             [ :find ?e 
               :where [ ?e :person/friend ?f ]
                      [ ?f :person/name "toto" ]
             ]              
-          """), Datomic.database) map {
+          """, Datomic.database) map {
             case e: Long =>
               val entity = Datomic.database.entity(e)
               val p @ Person(name, age) = DatomicMapping.fromEntity[Person](entity)
@@ -215,12 +216,12 @@ class DatomicTxSpec extends Specification {
         ) map { tx => 
           println(s"2 Provisioned more data... TX: $tx")
 
-          Datomic.q(Query("""
+          Datomic.q(query"""
             [ :find ?e 
               :where [ ?e :person/friend ?f ]
                      [ ?f :person/name "toto" ]
             ]
-          """), Datomic.database) map {
+          """, Datomic.database) map {
             case e: Long =>
               val entity = Datomic.database.entity(e)
               val Person(name, age) = DatomicMapping.fromEntity[Person](entity)

@@ -19,7 +19,7 @@ package macros
 
 import scala.reflect.macros.whitebox.Context
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.collection.mutable
 
 import clojure.lang.Keyword
@@ -72,17 +72,18 @@ private[datomisca] object MacroImpl {
   }
 
 
-  def cljRulesImpl(c: Context)(edn: c.Expr[String]): c.Expr[QueryRules] = {
+  def cljRulesImpl(c: Context)(args: c.Tree*): c.Expr[QueryRules] = {
     import c.universe._
 
-    edn.tree match {
+    c.prefix.tree match {
       case Literal(Constant(s: String)) =>
         val edn = readEDN(c, s)
         validateCljRules(c, edn)
         val helper = new Helper[c.type](c)
         helper.literalQueryRules(helper.literalEDN(edn))
 
-      case q"scala.StringContext.apply(..$parts).s(..$args)" =>
+      case Apply(_, List(a @ Apply(_, _))) =>
+        val q"scala.StringContext.apply(..$parts)" = a
         val partsWithPlaceholders = q"""Seq(..$parts).mkString(" ! ")"""
         val strWithPlaceHolders = c.eval(c.Expr[String](c.untypecheck(partsWithPlaceholders.duplicate)))
         val edn = readEDN(c, strWithPlaceHolders)
@@ -91,8 +92,8 @@ private[datomisca] object MacroImpl {
         val helper = new Helper[c.type](c)
         helper.literalQueryRules(helper.literalEDN(edn, argsStack))
 
-      case _ =>
-        abortWithMessage(c, "Expected a string literal")
+      case t =>
+        abortWithMessage(c, s"cljRulesImple: Expected a string literal, but got ${t}")
     }
   }
 
@@ -120,18 +121,18 @@ private[datomisca] object MacroImpl {
     }
 
 
-  def cljQueryImpl(c: Context)(edn: c.Expr[String]): c.Expr[AbstractQuery] = {
+  def cljQueryImpl(c: Context)(args: c.Tree*): c.Expr[AbstractQuery] = {
     import c.universe._
 
-    edn.tree match {
+    c.prefix.tree match {
       case Literal(Constant(s: String)) =>
         val edn = readEDN(c, s)
-
         val (query, inputSize, outputSize) = validateDatalog(c, edn)
         val helper = new Helper[c.type](c)
         helper.literalQuery(helper.literalEDN(query), inputSize, outputSize)
 
-      case q"scala.StringContext.apply(..$parts).s(..$args)" =>
+      case Apply(_, List(a @ Apply(_, _))) =>
+        val q"scala.StringContext.apply(..$parts)" = a
         val partsWithPlaceholders = q"""Seq(..$parts).mkString(" ! ")"""
         val strWithPlaceHolders = c.eval(c.Expr[String](c.untypecheck(partsWithPlaceholders.duplicate)))
         val edn = readEDN(c, strWithPlaceHolders)
@@ -142,7 +143,7 @@ private[datomisca] object MacroImpl {
         helper.literalQuery(t, inputSize, outputSize)
 
       case t =>
-        abortWithMessage(c, "Expected a string literal")
+        abortWithMessage(c, s"Expected a string literal, but got ${showRaw(t)}")
     }
   }
 

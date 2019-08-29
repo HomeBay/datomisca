@@ -54,7 +54,7 @@ object PartialAddEntity {
 final class AddEntity(val id: DId, partialProps: Map[Keyword, AnyRef]) extends PartialAddEntity(partialProps + (Namespace.DB / "id" -> id.toDatomicId)) with TxData with TempIdentified {
 
   def toTxData: AnyRef = {
-    import scala.collection.JavaConverters._
+    import scala.jdk.CollectionConverters._
     props.asJava
   }
 

@@ -16,7 +16,7 @@
 
 package datomisca
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.util.Try
 
 /** Main object containing:
@@ -97,11 +97,11 @@ private[datomisca] trait DatomicFacilities {
     * @return a sequence of operations or an error
     */
   def parseOps(ops: String): Try[Seq[TxData]] = Try {
-    datomic.Util.readAll(new java.io.StringReader(ops)).asInstanceOf[java.util.List[AnyRef]].asScala map { obj =>
+    datomic.Util.readAll(new java.io.StringReader(ops)).asInstanceOf[java.util.List[AnyRef]].asScala.map { obj =>
       new TxData {
         override val toTxData = obj
       }
-    }
+    }.toSeq
   }
 
 }

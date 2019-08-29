@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import org.specs2.mutable._
 
 import org.specs2.specification.core.Fragments
@@ -54,12 +56,12 @@ class DatomicQuerySpec extends Specification {
       implicit val conn = Datomic.connect(uri)
 
 
-      Datomic.q(Query("""
+      Datomic.q(query"""
         [ :find ?e ?n
           :where  [ ?e :person/name ?n ]
                   [ ?e :person/character :person.character/violent ]
         ]
-      """), Datomic.database) map {
+      """, Datomic.database) map {
         case (e: Long, n: String) =>
           val entity = Datomic.database.entity(e)
           println(s"1 - entity: $e name: $n - e: ${entity.get(person / "character")}")
@@ -72,9 +74,9 @@ class DatomicQuerySpec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      val q = Query("""
+      val q = query"""
         [:find ?e :where [?e :person/name]]
-      """)
+      """
       Datomic.q(q, Datomic.database) map {
         case e: Long =>
           val entity = Datomic.database.entity(e)
@@ -88,13 +90,13 @@ class DatomicQuerySpec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      Datomic.q(Query("""
+      Datomic.q(query"""
         [
          :find ?e
-         :in $ [?names ...]
+         :in $$ [?names ...]
          :where [?e :person/name ?names]
         ]
-      """), Datomic.database, Seq("toto", "tata")) map {
+      """, Datomic.database, Seq("toto", "tata")) map {
         case e: Long =>
           val entity = Datomic.database.entity(e)
           println(s"3 - entity: $e name: ${entity.get(person / "name")} - e: ${entity.get(person / "character")}")
@@ -106,14 +108,14 @@ class DatomicQuerySpec extends Specification {
     "4 - typed query with rule with list of tuple inputs" in {
 
       implicit val conn = Datomic.connect(uri)
-      val q = Query("""
+      val q = query"""
         [
          :find ?e ?name ?age
-         :in $ [[?name ?age]]
+         :in $$ [[?name ?age]]
          :where [?e :person/name ?name]
                 [?e :person/age ?age]
         ]
-      """)
+      """
       Datomic.q(
         q, Datomic.database,
         Datomic.list(
@@ -131,12 +133,12 @@ class DatomicQuerySpec extends Specification {
     "5 - typed query with fulltext query" in {
 
       implicit val conn = Datomic.connect(uri)
-      val q = Query("""
+      val q = query"""
         [
          :find ?e ?n
-         :where [(fulltext $ :person/name "toto") [[ ?e ?n ]]]
+         :where [(fulltext $$ :person/name "toto") [[ ?e ?n ]]]
         ]
-      """)
+      """
       Datomic.q(q, Datomic.database) map {
         case (e: Long, n: String) =>
           println(s"5 - entity: $e name: $n")
@@ -148,20 +150,20 @@ class DatomicQuerySpec extends Specification {
     "8 - query with rule alias" in {
       implicit val conn = Datomic.connect(uri)
 
-      val totoRule = Query.rules("""
+      val totoRule = rules"""
         [ [ [toto ?e]
            [?e :person/name "toto"]
         ] ]
-      """)
+      """
 
-      val q = Query("""
+      val q = query"""
         [
           :find ?e ?age
-          :in $ %
+          :in $$ %
           :where [?e :person/age ?age]
                  (toto ?e)
         ]
-      """)
+      """
 
       Datomic.q(q, Datomic.database, totoRule) map {
         case (e: Long, age: Long) =>
@@ -175,14 +177,14 @@ class DatomicQuerySpec extends Specification {
     "9 - query with with" in {
       implicit val conn = Datomic.connect(uri)
 
-      val q = Query("""
+      val q = query"""
         [ :find ?e ?n
           :with ?age
           :where  [ ?e :person/name ?n ]
                   [ ?e :person/age ?age ]
                   [ ?e :person/character :person.character/violent ]
         ]
-      """)
+      """
 
       Datomic.q(q, Datomic.database) map {
         case (e: Long, name: String) =>
@@ -197,9 +199,9 @@ class DatomicQuerySpec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      val q = Query("""
+      val q = query"""
         [:find ?e :where [?e :person/name]]
-      """)
+      """
       Datomic.q(q, Datomic.database) map {
         case e: Long =>
           val entity = Datomic.database.entity(e)
@@ -213,9 +215,9 @@ class DatomicQuerySpec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      val q = Query("""
+      val q = query"""
         [:find ?firstname ?lastname :where [?firstname ?lastname]]
-      """)
+      """
       Datomic.q(q, Seq(Seq("John", "Smith"))) map {
         case (firstname: String, lastname: String) =>
           firstname must beEqualTo("John")
@@ -230,9 +232,9 @@ class DatomicQuerySpec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      val q = Query("""
-        [:find ?firstname ?lastname :in $ :where [?firstname ?lastname]]
-      """)
+      val q = query"""
+        [:find ?firstname ?lastname :in $$ :where [?firstname ?lastname]]
+      """
       Datomic.q(q, Seq(Seq("John", "Smith"))) map {
         case (firstname: String, lastname: String) =>
           firstname must beEqualTo("John")

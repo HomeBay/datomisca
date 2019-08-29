@@ -17,9 +17,6 @@
 package datomisca
 package macros
 
-import scala.language.experimental.macros
-
-
 private[datomisca] trait QueryMacros {
 
   /** Parse a string as a Datalog query.
@@ -32,7 +29,7 @@ private[datomisca] trait QueryMacros {
     * }}}
     *
     * Implemented as a macro. The string is parsed at compile time,
-    * so any parsing errors will result in compliation failure. The
+    * so any parsing errors will result in compilation failure. The
     * parsing checks that the string is valid EDN, and a further round
     * of minimal validate is performed to ensure that the EDN has the
     * expected structure to be a Datalog query.
@@ -48,7 +45,7 @@ private[datomisca] trait QueryMacros {
     * @param edn a Datalog query as a string
     * @return an arity-typed query as a data structure
     */
-  def apply(edn: String): AbstractQuery = macro MacroImpl.cljQueryImpl
+//  def apply(edn: String): AbstractQuery = macro MacroImpl.cljQueryImpl
 
 
   /** Parse a string a collection of Datalog rules.
@@ -67,5 +64,5 @@ private[datomisca] trait QueryMacros {
     * @param edn Datalog rules as a string
     * @return Datalog rules as a data structure
     */
-  def rules(edn: String): QueryRules = macro MacroImpl.cljRulesImpl
+//  def rules(edn: String): QueryRules = macro MacroImpl.cljRulesImpl
 }

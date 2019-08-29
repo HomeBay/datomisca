@@ -16,6 +16,7 @@
 
 package datomisca
 
+import Queries._
 import DatomicMapping._
 
 import scala.language.reflectiveCalls
@@ -191,11 +192,11 @@ class DatomicMappingSpec extends Specification {
             realDoggy3Id = tx.resolve(doggy3Id)
 
 
-            Datomic.q(Query("""
+            Datomic.q(query"""
               [ :find ?e
                 :where [?e :person/name "toto"]
               ]
-            """), Datomic.database).head match {
+            """, Datomic.database).head match {
               case e: Long =>
                 val entity = Datomic.database.entity(e)
                 println(
@@ -225,11 +226,11 @@ class DatomicMappingSpec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      Datomic.q(Query("""
+      Datomic.q(query"""
         [ :find ?e
           :where [?e :person/name "toto"]
         ]
-      """), Datomic.database).head match {
+      """, Datomic.database).head match {
         case e: Long =>
           val entity = Datomic.database.entity(e)
 
@@ -314,11 +315,11 @@ class DatomicMappingSpec extends Specification {
             realDoggy2Id = tx.resolve(doggy2Id)
             realDoggy3Id = tx.resolve(doggy3Id)
 
-            Datomic.q(Query("""
+            Datomic.q(query"""
               [ :find ?e
                 :where [?e :person/name "toto"]
               ]
-            """), Datomic.database).head match {
+            """, Datomic.database).head match {
               case e: Long =>
                 val entity = Datomic.database.entity(e)
                 println(

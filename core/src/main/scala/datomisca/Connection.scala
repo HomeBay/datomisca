@@ -141,15 +141,16 @@ class Connection(val connection: datomic.Connection) extends AnyVal {
     Connection.bridgeDatomicFuture(connection.syncSchema(t)) map (new Database(_))
 
 
-  def transact(ops: TraversableOnce[TxData])(implicit ex: ExecutionContext): Future[TxReport] = {
+  def transact(ops: IterableOnce[TxData])(implicit ex: ExecutionContext): Future[TxReport] = {
     val arrayList =
       if (ops.isInstanceOf[Iterable[TxData]])
-        new ju.ArrayList[AnyRef](ops.size)
+        new ju.ArrayList[AnyRef](ops.iterator.size)
       else
         new ju.ArrayList[AnyRef]()
 
-    for (op <- ops)
+    ops.iterator.foreach { op =>
       arrayList.add(op.toTxData)
+    }
 
     val future = try {
         Connection.bridgeDatomicFuture(connection.transactAsync(arrayList))

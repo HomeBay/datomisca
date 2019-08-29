@@ -73,7 +73,8 @@ final case class Attribute[DD, Card <: Cardinality](
   val id = DId(Partition.DB)
 
   lazy val toAddOps: AddEntity = {
-    val mb = new scala.collection.mutable.MapBuilder[Keyword, AnyRef, Map[Keyword, AnyRef]](Map(
+
+    val mb = scala.collection.mutable.Map.from[Keyword, AnyRef](List(
       Attribute.id          -> id.toDatomicId,
       Attribute.ident       -> ident,
       Attribute.valueType   -> valueType.keyword,
@@ -89,7 +90,7 @@ final case class Attribute[DD, Card <: Cardinality](
     // installing attribute
     mb += Attribute.installAttr -> Partition.DB.keyword
 
-    new AddEntity(id, mb.result())
+    new AddEntity(id, mb.toMap)
   }
   
   override def toTxData: AnyRef = toAddOps.toTxData

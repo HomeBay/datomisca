@@ -65,7 +65,8 @@ class TxReport(rawReport: java.util.Map[_, _]) {
     override def get(tempId: DId) = resolveOpt(tempId)
     override def iterator = throw new UnsupportedOperationException
     override def +[T >: Long](kv: (DId, T)) = throw new UnsupportedOperationException
-    override def -(k: DId) = throw new UnsupportedOperationException
+    override def removed(key: DId): Map[DId, Long] = throw new UnsupportedOperationException
+    override def updated[V1 >: Long](key: DId, value: V1): Map[DId, V1] = throw new UnsupportedOperationException
   }
 
   override def toString =

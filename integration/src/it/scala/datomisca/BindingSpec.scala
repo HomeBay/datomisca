@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import org.scalatest.{FlatSpec, Matchers}
 
 
@@ -26,10 +28,10 @@ class BindingSpec
 {
 
   "A Query" can "bind variables" in {
-    val query = Query("""
+    val query = query"""
       [:find ?first ?last
        :in ?first ?last]
-    """)
+    """
 
     val res = Datomic.q(query, "John", "Doe")
 
@@ -38,10 +40,10 @@ class BindingSpec
   }
 
   it can "bind tuples" in {
-    val query = Query("""
+    val query = query"""
       [:find ?first ?last
        :in [?first ?last]]
-    """)
+    """
 
     val res = Datomic.q(query, Datomic.list("John", "Doe"))
 
@@ -50,10 +52,10 @@ class BindingSpec
   }
 
   it can "bind a relation" in {
-    val query = Query("""
+    val query = query"""
       [:find ?first ?last
        :in [[?first ?last]]]
-    """)
+    """
 
     val res =
       Datomic.q(query,
@@ -69,10 +71,10 @@ class BindingSpec
   }
 
   it can "bind a database" in {
-    val query = Query("""
+    val query = query"""
       [:find ?first
        :where [_ :first-name ?first]]
-    """)
+    """
 
     val res =
       Datomic.q(query,
@@ -90,11 +92,11 @@ class BindingSpec
   }
 
   it can "bind a collection of datoms" in withDatomicDB { implicit conn =>
-    val query = Query("""
+    val query = query"""
         [:find ?e
-         :in $ ?attrId
+         :in $$ ?attrId
          :where [?e ?attrId]]
-      """)
+      """
 
     val ds = conn.database().datoms(Database.AEVT, Attribute.doc)
 

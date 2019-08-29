@@ -20,7 +20,7 @@ package macros
 import scala.reflect.macros.whitebox.Context
 
 import scala.collection.mutable
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 import java.{lang => jl}
 import java.{math => jm}

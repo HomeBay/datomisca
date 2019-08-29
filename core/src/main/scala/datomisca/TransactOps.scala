@@ -50,7 +50,7 @@ private[datomisca] trait TransactOps {
     * @return A future of Transaction Report
     *
     */
-  def transact(ops: TraversableOnce[TxData])(implicit connection: Connection, ex: ExecutionContext): Future[TxReport] = connection.transact(ops)
+  def transact(ops: IterableOnce[TxData])(implicit connection: Connection, ex: ExecutionContext): Future[TxReport] = connection.transact(ops)
 
   /** Performs an Datomic async transaction with multiple operations.
     *

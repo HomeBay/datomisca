@@ -17,6 +17,7 @@
 package datomisca
 
 import DatomicMapping._
+import Queries._
 
 import scala.language.reflectiveCalls
 
@@ -230,11 +231,11 @@ class DatomicMapping2Spec extends Specification {
             realDoggy2Id = tx.resolve(doggy2Id)
             realDoggy3Id = tx.resolve(doggy3Id)
 
-            Datomic.q(Query("""
+            Datomic.q(query"""
               [ :find ?e 
                 :where [?e :person/name "toto"]
               ]
-            """), Datomic.database).head match {
+            """, Datomic.database).head match {
               case e: Long =>
                 val entity = Datomic.database.entity(e)
                 println(
@@ -258,21 +259,21 @@ class DatomicMapping2Spec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      Datomic.q(Query("""
+      Datomic.q(query"""
         [ :find ?e 
           :where [?e :dog/name "medor"]
         ]
-      """), Datomic.database).head match {
+      """, Datomic.database).head match {
         case e: Long =>
           val entity = Datomic.database.entity(e)
           DatomicMapping.fromEntity[Dog](entity) must beEqualTo(medor.copy(id=Some(realMedorId)))
       }
 
-      Datomic.q(Query("""
+      Datomic.q(query"""
         [ :find ?e 
           :where [?e :person/name "toto"]
         ]
-      """), Datomic.database).head match {
+      """, Datomic.database).head match {
         case e: Long =>
           val entity = Datomic.database.entity(e)
           val realMedor = medor.copy(id=Some(realMedorId))
@@ -295,11 +296,11 @@ class DatomicMapping2Spec extends Specification {
             ))
       }
 
-      Datomic.q(Query("""
+      Datomic.q(query"""
         [ :find ?e 
           :where [?e :person/name "toto2"]
         ]
-      """), Datomic.database).head match {
+      """, Datomic.database).head match {
         case e: Long =>
           val entity = Datomic.database.entity(e)
           DatomicMapping.fromEntity[Person3](entity) must beEqualTo(
@@ -315,11 +316,11 @@ class DatomicMapping2Spec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      Datomic.q(Query("""
+      Datomic.q(query"""
         [ :find ?e 
           :where [?e :person/name "toto"]
         ]
-      """), Datomic.database).head match {
+      """, Datomic.database).head match {
         case e: Long =>
           val entity = Datomic.database.entity(e)
 

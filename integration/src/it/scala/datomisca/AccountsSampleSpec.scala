@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import org.scalatest.{FlatSpec, Matchers}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -122,41 +124,41 @@ class AccountsSampleSpec
   object AccountsQueries {
     import AccountsSchema._
 
-    val queryAccounts = Query(s"""
+    val queryAccounts = query"""
       [:find ?a
        :in $$
        :where [?a ${name}]]
-    """)
+    """
 
-    val findAccountByName = Query(s"""
+    val findAccountByName = query"""
       [
         :find ?a
         :in $$ ?name
         :where
           [?a ${name} ?name]
       ]
-    """)
+    """
 
-    val queryAllTransactions = Query(s"""
+    val queryAllTransactions = query"""
       [:find ?tx
        :in $$
        :where
          [?tx ${amount}]]
-    """)
+    """
 
-    val rulesParty = Query.rules(s"""
+    val rulesParty = rules"""
       [[[party ?t ?a]
           [?t ${from} ?a]]
        [[party ?t ?a]
           [?t ${to} ?a]]]
-    """)
+    """
 
-    val queryAccountTransactions = Query("""
+    val queryAccountTransactions = query"""
       [:find ?t
-       :in $ % ?a
+       :in $$ % ?a
        :where
          (party ?t ?a)]
-    """)
+    """
   }
 
 

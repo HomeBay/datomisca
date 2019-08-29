@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import org.specs2.mutable._
 
 import scala.concurrent._
@@ -153,18 +155,18 @@ class DatomicDatabaseSpec extends Specification {
                  )
                )
         } yield {
-          val qPasswordHash = Query("""[:find ?v :in $ :where [_ :user/passwordHash ?v]]""")
+          val qPasswordHash = query"""[:find ?v :in $$ :where [_ :user/passwordHash ?v]]"""
 
           println("Find PasswordHash:" + Datomic.q(qPasswordHash, Datomic.database))
 
           Datomic.q(
-            Query("""
+            query"""
               [
                :find ?e
-               :in $ ?attr ?val
+               :in $$ ?attr ?val
                :where [?e ?attr ?val]
               ]
-            """),
+            """,
             Datomic.database,
             user / "email",
             "jdoe@example.com"
@@ -219,9 +221,9 @@ class DatomicDatabaseSpec extends Specification {
           }
 
           // all the stories
-          val qCount = Query("""
-            [:find ?e :in $ :where [?e :story/url ]]
-          """)
+          val qCount = query"""
+            [:find ?e :in $$ :where [?e :story/url ]]
+          """
           val count = Datomic.q(qCount, Datomic.database).size
           println(s"Found $count entities")
 

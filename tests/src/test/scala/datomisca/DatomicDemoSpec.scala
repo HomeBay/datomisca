@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import scala.language.reflectiveCalls
 
 import org.specs2.mutable._
@@ -96,15 +98,15 @@ class DatomicDemoSpec extends Specification {
            *  - change Input Args2 to Args3 to show compiling error (beginning of query)
            *  - erase ?a to show compiling error in query (beginning of query)
            */
-          val l1 = Datomic.q(Query("""
+          val l1 = Datomic.q(query"""
             [ 
               :find ?e ?name ?a
-              :in $ ?age
+              :in $$ ?age
               :where  [ ?e :person/name ?name ] 
                       [ ?e :person/age ?a ]
                       [ (<= ?a ?age) ]
             ]
-          """), Datomic.database, 40).map{
+          """, Datomic.database, 40).map{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
               val entity = Datomic.database.entity(id)
@@ -112,15 +114,15 @@ class DatomicDemoSpec extends Specification {
               name -> age
           }
 
-          val l2 = Datomic.q(Query("""
+          val l2 = Datomic.q(query"""
             [ 
               :find ?e ?name ?a
-              :in $ ?age
+              :in $$ ?age
               :where  [ ?e :person/name ?name ] 
                       [ ?e :person/age ?a ]
                       [ (not= ?a ?age) ]
             ]
-          """), Datomic.database, 35).map{
+          """, Datomic.database, 35).map{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
               val entity = Datomic.database.entity(id)
@@ -128,15 +130,15 @@ class DatomicDemoSpec extends Specification {
               name -> age
           }
 
-          val l3 = Datomic.q(Query("""
+          val l3 = Datomic.q(query"""
             [ 
               :find ?e ?name ?a
-              :in $ ?age
+              :in $$ ?age
               :where  [ ?e :person/name ?name ] 
                       [ ?e :person/age ?a ]
                       [ (== ?a ?age) ]
             ]
-          """), Datomic.database, 35L).map{
+          """, Datomic.database, 35L).map{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
               val entity = Datomic.database.entity(id)

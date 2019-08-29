@@ -16,6 +16,8 @@
 
 package datomisca
 
+import Queries._
+
 import scala.language.reflectiveCalls
 
 import org.scalatest.{FlatSpec, Matchers, OptionValues}
@@ -46,9 +48,9 @@ class ExcisionSpec
       val dbAfter = txReport.dbAfter
 
       Datomic.q(
-        Query("""
-          [:find ?e :in $ ?excised :where [?e :db/excise ?excised]]
-        """),
+        query"""
+          [:find ?e :in $$ ?excised :where [?e :db/excise ?excised]]
+        """,
         dbAfter,
         e).headOption.value should be (exId)
     }
@@ -68,9 +70,9 @@ class ExcisionSpec
       val dbAfter = txReport.dbAfter
 
       Datomic.q(
-        Query("""
-          [:find ?e :in $ ?excised :where [?e :db/excise ?excised]]
-        """),
+        query"""
+          [:find ?e :in $$ ?excised :where [?e :db/excise ?excised]]
+        """,
         dbAfter,
         e).headOption.value should be (exId)
     }
@@ -90,13 +92,13 @@ class ExcisionSpec
       val dbAfter = txReport.dbAfter
 
       Datomic.q(
-        Query(s"""
+        query"""
           [:find ?e
            :in $$ ?excised
            :where
             [?e :db/excise ?excised]
             [?e :db.excise/attrs ${PersonSampleData.Schema.ageAttr}]]
-        """),
+        """,
         dbAfter,
         e).headOption.value should be (exId)
     }
@@ -113,13 +115,13 @@ class ExcisionSpec
       val dbAfter = txReport.dbAfter
 
       Datomic.q(
-        Query("""
+        query"""
           [:find ?e
-           :in $ ?excised ?date
+           :in $$ ?excised ?date
            :where
             [?e :db/excise ?excised]
             [?e :db.excise/before ?date]]
-        """),
+        """,
         dbAfter,
         PersonSampleData.Schema.ageAttr,
         before).headOption.value should be (exId)
@@ -137,13 +139,13 @@ class ExcisionSpec
       val dbAfter = txReport.dbAfter
 
       Datomic.q(
-        Query("""
+        query"""
           [:find ?e
-           :in $ ?excised ?basisT
+           :in $$ ?excised ?basisT
            :where
             [?e :db/excise ?excised]
             [?e :db.excise/beforeT ?basisT]]
-        """),
+        """,
         dbAfter,
         PersonSampleData.Schema.ageAttr,
         beforeT).headOption.value should be (exId)
@@ -160,11 +162,11 @@ class ExcisionSpec
       val dbAfter = txReport.dbAfter
 
       Datomic.q(
-        Query("""
+        query"""
           [:find ?e
-           :in $ ?excised
+           :in $$ ?excised
            :where [?e :db/excise ?excised]]
-        """),
+        """,
         dbAfter,
         PersonSampleData.Schema.ageAttr).headOption.value should be (exId)
     }

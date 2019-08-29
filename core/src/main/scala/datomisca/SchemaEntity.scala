@@ -45,7 +45,7 @@ object SchemaEntity {
 
     def ++=[DD <: AnyRef, Card <: Cardinality, Coll, T]
           (attrVal: (Attribute[DD, Card], Coll))
-          (implicit ev1: Coll <:< Traversable[T], ev2: Attribute2FactWriter[DD, Card, T])
+          (implicit ev1: Coll <:< Iterable[T], ev2: Attribute2FactWriter[DD, Card, T])
           : this.type = {
       val attr = attrVal._1
       val coll = attrVal._2

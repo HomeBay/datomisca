@@ -16,8 +16,7 @@
 
 package datomisca
 
-import scala.collection.breakOut
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 import scala.concurrent.duration._
 
 import java.{util => ju}
@@ -58,7 +57,7 @@ class TxReportQueue(
   def drain(): List[TxReport] = {
     val c = new ju.LinkedList[ju.Map[_, _]]
     queue.drainTo(c)
-    c.asScala.map(new TxReport(_))(breakOut)
+    c.asScala.map(new TxReport(_)).toList
   }
 
 
@@ -75,7 +74,7 @@ class TxReportQueue(
   def drain(maxReports: Int): List[TxReport] = {
     val c = new ju.LinkedList[ju.Map[_, _]]
     queue.drainTo(c, maxReports)
-    c.asScala.map(new TxReport(_))(breakOut)
+    c.asScala.map(new TxReport(_)).toList
   }
 
 

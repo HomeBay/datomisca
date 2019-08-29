@@ -19,6 +19,7 @@ package datomisca
 import scala.concurrent.{ ExecutionContext, Future }
 import scala.util.Try
 
+import Queries._
 
 object SchemaManager {
 
@@ -29,11 +30,11 @@ object SchemaManager {
       entity(Namespace.DB.INSTALL / "_attribute")
     } .isSuccess
 
-  private val schemaTagQuery = Query("""
+  private val schemaTagQuery = query"""
       [:find ?e
-       :in $ ?schemaTag ?schemaName
+       :in $$ ?schemaTag ?schemaName
        :where [?e ?schemaTag ?schemaName]]
-    """)
+    """
 
   private[datomisca] def hasSchema(schemaTag: Keyword, schemaName: String)(implicit db: Database): Boolean =
     ! Datomic.q(schemaTagQuery, db, schemaTag, schemaName).isEmpty

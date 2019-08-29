@@ -16,6 +16,7 @@
 
 package datomisca
 
+import scala.jdk.CollectionConverters._
 
 private[datomisca] object Convert {
 
@@ -50,16 +51,7 @@ private[datomisca] object Convert {
     case e: datomic.Entity => new Entity(e)
     // a collection
     case coll: java.util.Collection[_] =>
-      new Iterable[Any] {
-        override def iterator = new Iterator[Any] {
-          private val jIter = coll.iterator.asInstanceOf[java.util.Iterator[AnyRef]]
-          override def hasNext = jIter.hasNext
-          override def next() = toScala(jIter.next())
-        }
-        override def isEmpty = coll.isEmpty
-        override def size = coll.size
-        override def toString = coll.toString
-      }
+      coll.asScala
     // otherwise
     case v => throw new UnsupportedDatomicTypeException(v.getClass)
   }
