@@ -94,6 +94,10 @@ val noPublishSettings = Seq(
   publishArtifact := false
 )
 
+publishMavenStyle := true
+
+publishTo := Some("S3 Artifacts" at "s3://homebay-artifacts/ext-releases-local")
+
 def datomic = "com.datomic" % "datomic-free" % "0.9.5561" % Provided
 def specs2 = "org.specs2" %% "specs2-core" % "4.7.0" % Test
 def scalatest = "org.scalatest" %% "scalatest" % "3.0.8" % "it"
