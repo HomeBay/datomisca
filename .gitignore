@@ -23,3 +23,8 @@ target/
 Gemfile
 Gemfile.lock
 
+# Metals
+.metals
+metals.sbt
+.bloop
+

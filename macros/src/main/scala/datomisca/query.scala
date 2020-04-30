@@ -48,4 +48,4 @@ final class QueryRules(val edn: clojure.lang.PersistentVector) extends AnyVal {
 }
 
 /** Provides methods for parsing Datalog queries and rules. */
-object Query extends macros.QueryMacros
+//object Query extends macros.QueryMacros
