@@ -113,6 +113,9 @@ import java.math.{BigInteger => JBigInt, BigDecimal => JBigDecimal}
 import java.{util => ju}
 import java.util.{Date, UUID}
 import java.net.URI
+import java.time.Instant
+import java.time.OffsetDateTime
+import java.time.ZonedDateTime
 
 /**
   * Think of FromDatomicInj[DD, T] as a type-level function: DD => T
@@ -158,8 +161,9 @@ trait FromDatomicImplicits {
   implicit val DLong2Char:              FromDatomic[jl.Long,     Short]       = FromDatomic(_.toShort)
   implicit val DLong2Short:             FromDatomic[jl.Long,     Char]        = FromDatomic(_.toChar)
   implicit val DLong2Byte:              FromDatomic[jl.Long,     Byte]        = FromDatomic(_.toByte)
-  implicit val DBigInt2JBigInt:         FromDatomic[JBigInt,  JBigInt]     = FromDatomic(identity)
+  implicit val DBigInt2JBigInt:         FromDatomic[JBigInt,     JBigInt]     = FromDatomic(identity)
   implicit val DBigDec2JBigDec:         FromDatomic[JBigDecimal, JBigDecimal] = FromDatomic(identity)
+  implicit val Date2Instant:            FromDatomic[Date,        Instant]     = FromDatomic(_.toInstant)
 
   // implicit def DD2DD[DD <: DatomicData] = FromDatomic[DD, DD]( dd => dd )
 
@@ -241,6 +245,12 @@ trait ToDatomicImplicits {
   implicit val Byte2DLong       = ToDatomic[jl.Long, Byte](_.toLong)
   implicit val JBigInt2DBigInt  = ToDatomic[JBigInt,  JBigInt](identity)
   implicit val JBigDec2DBigDec  = ToDatomic[JBigDecimal,  JBigDecimal](identity)
+
+  // Converters for java.time classes
+  implicit val Instant2Date       = ToDatomic[Date, Instant](Date.from)
+  implicit val OffsetDateTime2Date = ToDatomic[Date, OffsetDateTime](odt => Date.from(odt.toInstant))
+  implicit val ZonedDateTime2Date  = ToDatomic[Date, ZonedDateTime](zdt => Date.from(zdt.toInstant))
+
 
 
   implicit def DColl2SetWrites[C, A](implicit ev: C <:< Iterable[A], conv: ToDatomicCast[A]) = new ToDatomic[ju.List[AnyRef], C] {

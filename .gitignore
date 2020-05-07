@@ -18,6 +18,9 @@ target/
 .idea
 .idea_modules
 
+# VS Code
+Datomisca.code-workspace
+
 .DS_Store
 
 Gemfile
