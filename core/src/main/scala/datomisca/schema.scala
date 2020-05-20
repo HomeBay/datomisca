@@ -80,6 +80,10 @@ object SchemaType {
   object keyword extends SchemaType[Keyword] {
     val keyword = Namespace.DB.TYPE / "keyword"
   }
+
+  object tuple extends SchemaType[java.util.List[AnyRef]] {
+    val keyword = Namespace.DB.TYPE / "tuple"
+  }
 }
 
 sealed trait Cardinality {

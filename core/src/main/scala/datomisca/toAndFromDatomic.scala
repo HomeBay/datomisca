@@ -167,6 +167,114 @@ trait FromDatomicImplicits {
 
   // implicit def DD2DD[DD <: DatomicData] = FromDatomic[DD, DD]( dd => dd )
 
+
+  /**
+    * Implicit to convert Datomic tuples, which are expressed simply as Java lists of `Object` proper Scala tuples. 
+    * There is one of these implicits for every size tuple that datomic allows, which is 2-8. 
+    *
+    * @tparam A the type of the first element in the tuple
+    * @tparam B the type of the second element in the tuple
+    * @param conv1 converter to create the first element in the tuple
+    * @param conv2 converter to create the second element in the tuple
+    * 
+    * @return a converter from type `java.util.List[AnyRef]` to a tuple of type `(A,B)`
+    */
+  implicit def javaListToTuple2[A,B](implicit conv1: FromDatomicCast[A], 
+                                              conv2: FromDatomicCast[B]): FromDatomic[ju.List[AnyRef], (A,B)] = new FromDatomic[ju.List[AnyRef], (A,B)] {
+
+    override def from(l: ju.List[AnyRef]) = (conv1.from(l.get(0)), conv2.from(l.get(1)))
+  }
+
+  /**
+    * Implicit to convert Datomic tuples, which are expressed simply as Java lists of `Object` proper Scala tuples. 
+    * There is one of these implicits for every size tuple that datomic allows, which is 2-8. 
+    *
+    * @tparam A the type of the first element in the tuple
+    * @tparam B the type of the second element in the tuple
+    * @tparam C the type of the third element in the tuple
+    * @param conv1 converter to create the first element in the tuple
+    * @param conv2 converter to create the second element in the tuple
+    * @param conv3 converter to create the third element in the tuple
+    *
+    * @return a converter from type `java.util.List[AnyRef]` to a tuple of type `(A,B,C,D)`
+    */
+  implicit def javaListToTuple3[A,B,C](implicit conv1: FromDatomicCast[A], 
+                                                conv2: FromDatomicCast[B],
+                                                conv3: FromDatomicCast[C]): FromDatomic[ju.List[AnyRef], (A,B,C)] = new FromDatomic[ju.List[AnyRef], (A,B,C)] {
+
+    override def from(l: ju.List[AnyRef]) = (conv1.from(l.get(0)), conv2.from(l.get(1)), conv3.from(l.get(2)))
+  }
+
+  implicit def javaListToTuple4[A,B,C,D](implicit conv1: FromDatomicCast[A], 
+                                                  conv2: FromDatomicCast[B],
+                                                  conv3: FromDatomicCast[C],
+                                                  conv4: FromDatomicCast[D]): FromDatomic[ju.List[AnyRef], (A,B,C,D)] = new FromDatomic[ju.List[AnyRef], (A,B,C,D)] {
+
+    override def from(l: ju.List[AnyRef]) = (conv1.from(l.get(0)), conv2.from(l.get(1)), conv3.from(l.get(2)), conv4.from(l.get(3)))
+  }
+
+  implicit def javaListToTuple5[A,B,C,D,E](implicit conv1: FromDatomicCast[A], 
+                                                    conv2: FromDatomicCast[B],
+                                                    conv3: FromDatomicCast[C],
+                                                    conv4: FromDatomicCast[D], 
+                                                    conv5: FromDatomicCast[E]): FromDatomic[ju.List[AnyRef], (A,B,C,D,E)] = new FromDatomic[ju.List[AnyRef], (A,B,C,D,E)] {
+
+    override def from(l: ju.List[AnyRef]) = (conv1.from(l.get(0)), conv2.from(l.get(1)), conv3.from(l.get(2)), conv4.from(l.get(3)), conv5.from(l.get(4)))
+  }
+
+    implicit def javaListToTuple6[A,B,C,D,E,F](implicit conv1: FromDatomicCast[A], 
+                                                        conv2: FromDatomicCast[B],
+                                                        conv3: FromDatomicCast[C],
+                                                        conv4: FromDatomicCast[D], 
+                                                        conv5: FromDatomicCast[E],
+                                                        conv6: FromDatomicCast[F]): FromDatomic[ju.List[AnyRef], (A,B,C,D,E,F)] = new FromDatomic[ju.List[AnyRef], (A,B,C,D,E,F)] {
+
+    override def from(l: ju.List[AnyRef]) = (conv1.from(l.get(0)), 
+                                             conv2.from(l.get(1)), 
+                                             conv3.from(l.get(2)), 
+                                             conv4.from(l.get(3)), 
+                                             conv5.from(l.get(4)), 
+                                             conv6.from(l.get(5)))
+  }
+
+  implicit def javaListToTuple7[A,B,C,D,E,F,G](implicit conv1: FromDatomicCast[A], 
+                                                        conv2: FromDatomicCast[B],
+                                                        conv3: FromDatomicCast[C],
+                                                        conv4: FromDatomicCast[D], 
+                                                        conv5: FromDatomicCast[E],
+                                                        conv6: FromDatomicCast[F], 
+                                                        conv7: FromDatomicCast[G]): FromDatomic[ju.List[AnyRef], (A,B,C,D,E,F,G)] = new FromDatomic[ju.List[AnyRef], (A,B,C,D,E,F,G)] {
+
+    override def from(l: ju.List[AnyRef]) = (conv1.from(l.get(0)), 
+                                             conv2.from(l.get(1)), 
+                                             conv3.from(l.get(2)), 
+                                             conv4.from(l.get(3)), 
+                                             conv5.from(l.get(4)), 
+                                             conv6.from(l.get(5)), 
+                                             conv7.from(l.get(6)))
+  }
+
+  implicit def javaListToTuple8[A,B,C,D,E,F,G,H](implicit conv1: FromDatomicCast[A], 
+                                                          conv2: FromDatomicCast[B],
+                                                          conv3: FromDatomicCast[C],
+                                                          conv4: FromDatomicCast[D], 
+                                                          conv5: FromDatomicCast[E],
+                                                          conv6: FromDatomicCast[F], 
+                                                          conv7: FromDatomicCast[G], 
+                                                          conv8: FromDatomicCast[H]): FromDatomic[ju.List[AnyRef], (A,B,C,D,E,F,G,H)] = new FromDatomic[ju.List[AnyRef], (A,B,C,D,E,F,G,H)] {
+
+    override def from(l: ju.List[AnyRef]) = (conv1.from(l.get(0)), 
+                                             conv2.from(l.get(1)), 
+                                             conv3.from(l.get(2)), 
+                                             conv4.from(l.get(3)), 
+                                             conv5.from(l.get(4)), 
+                                             conv6.from(l.get(5)), 
+                                             conv7.from(l.get(6)), 
+                                             conv8.from(l.get(7)))
+  }
+
+
+
   implicit def JavaSetToScalaSet[T](implicit conv: FromDatomicCast[T]): FromDatomic[ju.Set[AnyRef], Set[T]] = new FromDatomic[ju.Set[AnyRef], Set[T]] {
     override def from(l: ju.Set[AnyRef]) = {
       val builder = Set.newBuilder[T]
@@ -213,18 +321,18 @@ trait FromDatomicCastImplicits {
   * is a partial function.
   */
 trait ToDatomicInjImplicits {
-  implicit val String2DString   = ToDatomicInj[String,  String](identity)
-  implicit val Boolean2DBoolean = ToDatomicInj[jl.Boolean, Boolean](identity)
-  implicit val Long2DLong       = ToDatomicInj[jl.Long,    Long](identity)
-  implicit val Double2DDouble   = ToDatomicInj[jl.Double,  Double](identity)
-  implicit val Float2DFloat     = ToDatomicInj[jl.Float,   Float](identity)
-  implicit val BigInt2DBigInt   = ToDatomicInj[JBigInt,  BigInt]((i: BigInt) => i.bigInteger)
+  implicit val String2DString   = ToDatomicInj[String,      String](identity)
+  implicit val Boolean2DBoolean = ToDatomicInj[jl.Boolean,  Boolean](identity)
+  implicit val Long2DLong       = ToDatomicInj[jl.Long,     Long](identity)
+  implicit val Double2DDouble   = ToDatomicInj[jl.Double,   Double](identity)
+  implicit val Float2DFloat     = ToDatomicInj[jl.Float,    Float](identity)
+  implicit val BigInt2DBigInt   = ToDatomicInj[JBigInt,     BigInt]((i: BigInt) => i.bigInteger)
   implicit val BigDec2DBigDec   = ToDatomicInj[JBigDecimal, BigDecimal]((i: BigDecimal) => i.bigDecimal)
-  implicit val Date2DDate       = ToDatomicInj[Date, Date](identity)
-  implicit val UUID2DUuid       = ToDatomicInj[UUID,    UUID](identity)
-  implicit val URI2DUri         = ToDatomicInj[URI,     URI](identity)
-  implicit val Bytes2DBytes     = ToDatomicInj[Array[Byte],   Array[Byte]](identity)
-  implicit val Keyword2DKeyword = ToDatomicInj[Keyword, Keyword](identity)
+  implicit val Date2DDate       = ToDatomicInj[Date,        Date](identity)
+  implicit val UUID2DUuid       = ToDatomicInj[UUID,        UUID](identity)
+  implicit val URI2DUri         = ToDatomicInj[URI,         URI](identity)
+  implicit val Bytes2DBytes     = ToDatomicInj[Array[Byte], Array[Byte]](identity)
+  implicit val Keyword2DKeyword = ToDatomicInj[Keyword,     Keyword](identity)
 
 }
 
@@ -251,6 +359,121 @@ trait ToDatomicImplicits {
   implicit val OffsetDateTime2Date = ToDatomic[Date, OffsetDateTime](odt => Date.from(odt.toInstant))
   implicit val ZonedDateTime2Date  = ToDatomic[Date, ZonedDateTime](zdt => Date.from(zdt.toInstant))
 
+
+  // Converters for the various tuple types. Datomic only supports  
+
+  /**
+    * Converts a Scala tuple to a Datomic tuple, which is expressed in the Java API simply as a 
+    * `java.util.List[AnyRef]`. This function simultaniously converts each element in the list to its corresponding 
+    * Datomic type, as well as wrapps everything up into a Java List.
+    * 
+    * Note that there is one of these implicit definitions for each sized tuple that Datomic suppors (2-8).
+    *
+    * @param conv1 needed to convert the first element in the tuple to its corresponding Datomic type
+    * @param conv2 needed to convert the second element in the tuple to its corresponding Datomic type
+    * 
+    * @return the implicit converter
+    */
+  implicit def tuple2ToList[A,B](implicit conv1: ToDatomicCast[A], conv2: ToDatomicCast[B]) = new ToDatomic[ju.List[AnyRef], (A,B)] {
+
+    override def to(c: (A,B)) = {
+
+      datomic.Util.list(conv1.to(c._1), conv2.to(c._2)).asInstanceOf[ju.List[AnyRef]]
+    }
+  }
+
+  implicit def tuple3ToList[A,B,C](implicit conv1: ToDatomicCast[A], 
+                                            conv2: ToDatomicCast[B], 
+                                            conv3: ToDatomicCast[C]) = new ToDatomic[ju.List[AnyRef], (A,B,C)] {
+
+    override def to(c: (A,B,C)) = {
+
+      datomic.Util.list(conv1.to(c._1), conv2.to(c._2), conv3.to(c._3)).asInstanceOf[ju.List[AnyRef]]
+    }
+  }
+
+  implicit def tuple4ToList[A,B,C,D](implicit conv1: ToDatomicCast[A], 
+                                            conv2: ToDatomicCast[B], 
+                                            conv3: ToDatomicCast[C], 
+                                            conv4: ToDatomicCast[D]) = new ToDatomic[ju.List[AnyRef], (A,B,C,D)] {
+
+    override def to(c: (A,B,C,D)) = {
+
+      datomic.Util.list(conv1.to(c._1), conv2.to(c._2), conv3.to(c._3), conv4.to(c._4)).asInstanceOf[ju.List[AnyRef]]
+    }
+  }
+
+  implicit def tuple5ToList[A,B,C,D,E](implicit conv1: ToDatomicCast[A], 
+                                            conv2: ToDatomicCast[B], 
+                                            conv3: ToDatomicCast[C], 
+                                            conv4: ToDatomicCast[D], 
+                                            conv5: ToDatomicCast[E]) = new ToDatomic[ju.List[AnyRef], (A,B,C,D,E)] {
+
+    override def to(c: (A,B,C,D,E)) = {
+
+      datomic.Util.list(conv1.to(c._1), conv2.to(c._2), conv3.to(c._3), conv4.to(c._4), conv5.to(c._5)).asInstanceOf[ju.List[AnyRef]]
+    }
+  }
+
+  implicit def tuple6ToList[A,B,C,D,E,F](implicit conv1: ToDatomicCast[A], 
+                                            conv2: ToDatomicCast[B], 
+                                            conv3: ToDatomicCast[C], 
+                                            conv4: ToDatomicCast[D], 
+                                            conv5: ToDatomicCast[E], 
+                                            conv6: ToDatomicCast[F]) = new ToDatomic[ju.List[AnyRef], (A,B,C,D,E,F)] {
+
+    override def to(c: (A,B,C,D,E,F)) = {
+
+      datomic.Util.list(conv1.to(c._1), 
+                        conv2.to(c._2), 
+                        conv3.to(c._3), 
+                        conv4.to(c._4), 
+                        conv5.to(c._5), 
+                        conv6.to(c._6)).asInstanceOf[ju.List[AnyRef]]
+    }
+  }
+
+  implicit def tuple7ToList[A,B,C,D,E,F,G](implicit conv1: ToDatomicCast[A], 
+                                            conv2: ToDatomicCast[B], 
+                                            conv3: ToDatomicCast[C], 
+                                            conv4: ToDatomicCast[D], 
+                                            conv5: ToDatomicCast[E], 
+                                            conv6: ToDatomicCast[F], 
+                                            conv7: ToDatomicCast[G]) = new ToDatomic[ju.List[AnyRef], (A,B,C,D,E,F,G)] {
+
+    override def to(c: (A,B,C,D,E,F,G)) = {
+
+      datomic.Util.list(conv1.to(c._1), 
+                        conv2.to(c._2), 
+                        conv3.to(c._3), 
+                        conv4.to(c._4), 
+                        conv5.to(c._5), 
+                        conv6.to(c._6), 
+                        conv7.to(c._7)).asInstanceOf[ju.List[AnyRef]]
+    }
+  }
+
+  implicit def tuple8ToList[A,B,C,D,E,F,G,H](implicit conv1: ToDatomicCast[A], 
+                                            conv2: ToDatomicCast[B], 
+                                            conv3: ToDatomicCast[C], 
+                                            conv4: ToDatomicCast[D], 
+                                            conv5: ToDatomicCast[E], 
+                                            conv6: ToDatomicCast[F], 
+                                            conv7: ToDatomicCast[G], 
+                                            conv8: ToDatomicCast[H]) = new ToDatomic[ju.List[AnyRef], (A,B,C,D,E,F,G,H)] {
+
+    override def to(c: (A,B,C,D,E,F,G,H)) = {
+
+      datomic.Util.list(conv1.to(c._1), 
+                        conv2.to(c._2), 
+                        conv3.to(c._3), 
+                        conv4.to(c._4), 
+                        conv5.to(c._5), 
+                        conv6.to(c._6), 
+                        conv7.to(c._7),
+                        conv8.to(c._8)).asInstanceOf[ju.List[AnyRef]]
+    }
+  }
 
 
   implicit def DColl2SetWrites[C, A](implicit ev: C <:< Iterable[A], conv: ToDatomicCast[A]) = new ToDatomic[ju.List[AnyRef], C] {
