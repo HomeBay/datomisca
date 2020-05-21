@@ -2,7 +2,7 @@
 - [x] Scala 2.13 support
 - [x] `java.time.*` support 
 - [x] [Heterogeneous tuples](https://docs.datomic.com/cloud/schema/schema-reference.html#heterogeneous-tuples)
-- [ ] [Composite tuples](https://docs.datomic.com/cloud/schema/schema-reference.html#composite-tuples)
+- [x] [Composite tuples](https://docs.datomic.com/cloud/schema/schema-reference.html#composite-tuples)
 - [ ] [Predicates](https://docs.datomic.com/cloud/schema/schema-reference.html#attribute-predicates)
 - [ ] [qseq](https://docs.datomic.com/on-prem/query.html#qseq) support
 - [ ] [Index Pull](https://docs.datomic.com/on-prem/index-pull.html)
