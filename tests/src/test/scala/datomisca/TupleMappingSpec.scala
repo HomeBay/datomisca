@@ -100,7 +100,6 @@ class TupleMappingSpec extends Specification {
           override val all: List[State] = List(CA, NY, TX) // 5
         }
 
-
         object Schema {  // 2 8 
 
           object ns {
@@ -148,6 +147,58 @@ class TupleMappingSpec extends Specification {
       }, Duration("2 seconds"))
     }
 
+
+    "Handle a composite tuple of size 2" in {
+
+      case class Point(x: Long, y: Long, point: (Long, Long))
+
+      object Point {
+
+        object Schema {
+
+          val namespace = Namespace("point")
+
+          val x  = Attribute(namespace / "x", SchemaType.long, Cardinality.one)
+          val y  = Attribute(namespace / "y", SchemaType.long, Cardinality.one)
+          // create a unique composite of x and y such that new two identical points can exist at the same time in the DB
+          val point = Attribute(namespace / "point", SchemaType.tuple, Cardinality.one).withTupleAttrs(x, y).withUnique(Unique.identity)
+
+          val all = List(x, y, point)
+        }
+
+        implicit val reader = (
+          Schema.x.read[Long] and 
+          Schema.y.read[Long] and 
+          Schema.point.read[(Long, Long)]
+        )(Point.apply _)
+
+      }
+
+      val tempId = DId(Partition.USER)
+      def insert(id: DId): AddEntity = (
+        SchemaEntity.newBuilder
+          += (Point.Schema.x  -> 1)
+          += (Point.Schema.y  -> 2)
+        ) withId id
+
+      Datomic.createDatabase(uri)
+      implicit val conn = Datomic.connect(uri)
+
+      Await.result(for{
+        _        <- Datomic.transact(Point.Schema.all)
+        txReport <- Datomic.transact(insert(tempId)) 
+      } yield {
+
+        val db = txReport.dbAfter
+        val entity = db.entity(txReport.resolve(tempId))
+        val point = DatomicMapping.fromEntity[Point](entity)
+
+        point.point === (1,2)
+      }, Duration("2 seconds"))
+
+      // insert another one but this time make sure it throws an exception due to the uniqque constraint
+      Await.result(for{_ <- Datomic.transact(insert(DId(Partition.USER))) } yield (), Duration("2 seconds")) must throwA[Exception]
+    }
   } // end should
 }
 

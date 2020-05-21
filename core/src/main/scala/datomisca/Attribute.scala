@@ -28,6 +28,7 @@ final case class Attribute[DD, Card <: Cardinality](
     valueType:          SchemaType[DD],
     cardinality:        Card,
     tupleTypes:         Seq[SchemaType[_]] = Nil,
+    tupleAttrs:         Seq[Attribute[_,_]] = Nil,
     doc:                Option[String]  = None,
     unique:             Option[Unique]  = None,
     index:              Option[Boolean] = None,
@@ -36,7 +37,26 @@ final case class Attribute[DD, Card <: Cardinality](
     noHistory:          Option[Boolean] = None
 ) extends TxData with KeywordIdentified {
 
+  /**
+    * When this attribute is of type [[SchemaType.tuple]] and you wish to create a scalar (heterogeneus) tuple, use 
+    * this method to specify the tuple types. 
+    *
+    * @see [[https://docs.datomic.com/cloud/schema/schema-reference.html#heterogeneous-tuples]]
+    * @param ttypes the tuple types in the order that they should exist
+    * @return a copy of this attribute with the tuple types added in. 
+    */
   def withTupleTypes(ttypes: SchemaType[_] *) = copy(tupleTypes = ttypes)
+
+  /**
+    * When this attribute is of tupe [[SchemaType.tuple]] and you wish to create a composite tuple, use 
+    * this method to specify the linked attributes. 
+    *
+    * @see [[https://docs.datomic.com/cloud/schema/schema-reference.html#composite-tuples]]
+    * @param attrs the other attributes that this attribute will be a composite of
+    * @return a copy of this attribute with the tuple attributes added in. 
+    */
+  def withTupleAttrs(attrs: Attribute[_,_] *) = copy(tupleAttrs = attrs)
+
 
   /** Extend this attribute with a documentation string. */
   def withDoc(str: String)        = copy( doc = Some(str) )
@@ -86,8 +106,7 @@ final case class Attribute[DD, Card <: Cardinality](
       Attribute.cardinality -> cardinality.keyword
     ))
 
-    //for(ttype <- tupleTypes)
-
+    if(tupleAttrs.nonEmpty) mb += Attribute.tupleAttrs -> Util.list(tupleAttrs.map(_.ident):_*)
     if(tupleTypes.nonEmpty) mb += Attribute.tupleTypes -> Util.list(tupleTypes.map(_.keyword):_*)
 
     if(doc.isDefined) mb += Attribute.doc -> doc.get
@@ -160,6 +179,8 @@ object Attribute {
   val cardinality = Namespace.DB / "cardinality"
   /** :db/tupleTypes */
   val tupleTypes  = Namespace.DB / "tupleTypes"
+  /** :db/tupleAttrs */
+  val tupleAttrs  = Namespace.DB / "tupleAttrs"
   /** :db/doc */
   val doc         = Namespace.DB / "doc"
   /** :db/unique */
