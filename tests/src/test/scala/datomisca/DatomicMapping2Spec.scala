@@ -25,7 +25,12 @@ import org.specs2.mutable._
 
 import scala.concurrent._
 import ExecutionContext.Implicits.global
-import scala.concurrent.duration.Duration
+import scala.concurrent.duration._
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.time.OffsetDateTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 
 class DatomicMapping2Spec extends Specification {
@@ -359,6 +364,61 @@ class DatomicMapping2Spec extends Specification {
       }
 
       success
+    }
+
+    "Correctly translate Datomic instants to java.time classes" in {
+
+      implicit val conn = Datomic.connect(uri)
+
+      val now = Instant.now()
+      val tomorrow = now.plus(1, ChronoUnit.DAYS)
+      val dayAfterTomorrow = now.plus(1, ChronoUnit.DAYS)
+      
+      case class DateInfo(first: Instant, second: Instant, third: Option[Instant])
+
+      object DateInfo {
+
+        object Schema {
+
+          val namespace  = Namespace("dateInfo")
+
+          val first  = Attribute(namespace / "first", SchemaType.instant, Cardinality.one) .withDoc("The first date")
+          val second = Attribute(namespace / "second", SchemaType.instant, Cardinality.one) .withDoc("The second date")
+          val third  = Attribute(namespace / "third", SchemaType.instant, Cardinality.one) .withDoc("The second date")
+
+          val all = List(first, second, third)
+        }
+
+        implicit val reader = (
+          Schema.first.read[Instant] and
+          Schema.second.read[Instant] and 
+          Schema.third.readOpt[Instant] 
+        )(DateInfo.apply _)
+
+      }
+
+      val tempId = DId(Partition.USER)
+      val insert: AddEntity = (
+        SchemaEntity.newBuilder
+          += (DateInfo.Schema.first  -> now)
+           // tweak the types of the times to make sure that they all work going in
+          += (DateInfo.Schema.second -> OffsetDateTime.ofInstant(tomorrow, ZoneId.systemDefault()))
+          += (DateInfo.Schema.third  -> ZonedDateTime.ofInstant(dayAfterTomorrow, ZoneId.systemDefault()))
+        ) withId tempId
+
+        Await.result(
+          for { 
+            _        <- Datomic.transact(DateInfo.Schema.all)
+            txReport <- Datomic.transact(insert) 
+          } yield {
+
+            val db = txReport.dbAfter
+            val entity = db.entity(txReport.resolve(tempId))
+            val info = DatomicMapping.fromEntity[DateInfo](entity)
+
+          // validate that the times came out correctly
+          (info.first === now) and (info.second === tomorrow) and (info.third === Some(dayAfterTomorrow)) 
+        }, Duration("2 seconds"))
     }
 
   }
