@@ -72,7 +72,7 @@ private[datomisca] class Helper[C <: Context](val c: C) {
 
 
   def literalBoolean(b: jl.Boolean): c.Tree =
-    q"new _root_.java.lang.Boolean(${b.booleanValue})"
+    q"_root_.java.lang.Boolean.valueOf(${b.booleanValue})"
 
 
   def literalCljSymbol(s: clj.Symbol, stk: mutable.Stack[c.Tree]): c.Tree = {
@@ -104,11 +104,11 @@ private[datomisca] class Helper[C <: Context](val c: C) {
 
 
   def literalLong(l: jl.Long): c.Tree =
-    q"new _root_.java.lang.Long(${l.longValue})"
+    q"_root_.java.lang.Long.valueOf(${l.longValue})"
 
 
   def literalDouble(d: jl.Double): c.Tree =
-    q"new _root_.java.lang.Double(${d.doubleValue})"
+    q"_root_.java.lang.Double.valueOf(${d.doubleValue})"
 
 
   def literalCljBigInt(k: clj.BigInt): c.Tree =

@@ -244,5 +244,23 @@ class DatomicQuerySpec extends Specification {
 
       success
     }
+
+    "15 - boolean literals" in {
+
+      implicit val conn = Datomic.connect(uri)
+
+      Datomic.q(query"""
+        [ :find ?e ?n
+          :where  [ ?e :person/name ?n ]
+                  [ ?e :person/verified true ]
+        ]
+      """, Datomic.database) map {
+        case (e: Long, n: String) =>
+          val entity = Datomic.database.entity(e)
+          println(s"1 - entity: $e verified: ${entity.get(person / "verified")}")
+      }
+
+      success
+    }
   }
 }

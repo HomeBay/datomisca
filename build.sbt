@@ -16,6 +16,12 @@ lazy val compilerOptions = Seq(
   "-Ywarn-value-discard"
 )
 
+lazy val testCompilerOptions = Seq(
+  "-deprecation",
+  "-encoding", "UTF-8",
+  "-feature"
+)
+
 resolvers in ThisBuild ++= Seq(
   "clojars"        at "https://clojars.org/repo",
   "my.datomic.com" at "https://my.datomic.com/repo"
@@ -31,6 +37,7 @@ lazy val tests = project.in(file("tests")).
   settings(noPublishSettings).
   settings(
     name := "datomisca-tests",
+    scalacOptions := testCompilerOptions,
     libraryDependencies ++= Seq(
       datomic,
       specs2
@@ -99,7 +106,7 @@ val noPublishSettings = Seq(
 
 publishMavenStyle := true
 
-// publishTo := Some("S3 Artifacts" at "s3://homebay-artifacts/ext-releases-local")
+ publishTo := Some("S3 Artifacts" at "s3://homebay-artifacts/ext-releases-local")
 
 def datomic   = "com.datomic"                 % "datomic-pro"   % "1.0.6165" % Provided
 def specs2    = "org.specs2"                  %% "specs2-core"  % "4.7.0" % Test

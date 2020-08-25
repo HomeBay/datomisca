@@ -35,6 +35,7 @@ object DatomicBootstrap {
     val schema = Seq(
       Attribute(person / "name",      SchemaType.string, Cardinality.one) .withDoc("Person's name").withFullText(true),
       Attribute(person / "age",       SchemaType.long,   Cardinality.one) .withDoc("Person's age"),
+      Attribute(person / "verified", SchemaType.boolean, Cardinality.one).withDoc("Is person verified"),
       Attribute(person / "character", SchemaType.ref,    Cardinality.many).withDoc("Person's characterS"),
       violent,
       weak,
@@ -51,6 +52,7 @@ object DatomicBootstrap {
         Entity.add(DId(Partition.USER))(
           person / "name"      -> "toto",
           person / "age"       -> 30L,
+          person / "verified"  -> true,
           person / "character" -> Set(weak, dumb)
         ),
         Entity.add(DId(Partition.USER))(
