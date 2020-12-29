@@ -20,7 +20,7 @@ import clojure.{lang => clj}
 
 
 class DatomiscaException(message: String, cause: Throwable) extends RuntimeException(message, cause) {
-  def this(message: String) {
+  def this(message: String) = {
     this(message, null)
   }
 }
@@ -55,7 +55,7 @@ object ExceptionInfo {
       val entry = iter.next.asInstanceOf[clj.IMapEntry]
       builder += (entry.key.toString -> entry.`val`.toString)
     }
-    builder.result
+    builder.result()
   }
 
   def unapply(t: Throwable): Option[(Throwable, Map[String, String])] = t match {

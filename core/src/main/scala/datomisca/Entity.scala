@@ -73,7 +73,7 @@ class Entity(val entity: datomic.Entity) extends AnyVal {
     while (iter.hasNext) {
       builder += iter.next()
     }
-    builder.result
+    builder.result()
   }
 
   def toMap: Map[String, Any] = {
@@ -83,7 +83,7 @@ class Entity(val entity: datomic.Entity) extends AnyVal {
       val key = iter.next()
       builder += (key -> Convert.toScala(entity.get(key)))
     }
-    builder.result
+    builder.result()
   }
 
   override def toString = entity.toString
@@ -131,7 +131,7 @@ object Entity {
   def add[T](id: T)(props: (Keyword, DWrapper)*)(implicit ev: AsEntityId[T]) = {
     val builder = Map.newBuilder[Keyword, AnyRef]
     for (p <- props) builder += (p._1 -> p._2.asInstanceOf[DWrapperImpl].underlying)
-    new AddEntity(ev.conv(id), builder.result)
+    new AddEntity(ev.conv(id), builder.result())
   }
 
   /** Creates a collection of assertions about the given entity id `id`.

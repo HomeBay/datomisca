@@ -48,7 +48,7 @@ private[datomisca] object QueryExecutor {
           builder += e.getMessage
           e = e.getCause
         }
-        throw new QueryProcessingException(e, builder.result)
+        throw new QueryProcessingException(e, builder.result())
       case NonFatal(ex) =>
         throw new QueryException(ex)
     }

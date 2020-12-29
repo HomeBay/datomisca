@@ -1,6 +1,6 @@
 organization in ThisBuild := "com.homebay"
 licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
-scalaVersion in ThisBuild := "2.13.1"
+scalaVersion in ThisBuild := "2.13.4"
 
 lazy val compilerOptions = Seq(
   "-deprecation",

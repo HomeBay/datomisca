@@ -44,7 +44,7 @@ object DatomicBootstrap {
       stupid
     )
 
-    println(s"created DB with uri $theUri: ${Datomic.createDatabase(theUri)}")
+  //  println(s"created DB with uri $theUri: ${Datomic.createDatabase(theUri)}")
     implicit val conn = Datomic.connect(theUri)
 
     Datomic.transact(schema) flatMap { tx =>

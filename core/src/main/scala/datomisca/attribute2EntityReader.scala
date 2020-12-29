@@ -66,7 +66,11 @@ object Attribute2EntityReaderInj {
     new Attribute2EntityReaderInj[DatomicRef.type, Cardinality.many.type, Set[Any]] {
       override def convert(attr: Attribute[DatomicRef.type, Cardinality.many.type]) = new EntityReader[Set[Any]] {
         override def read(entity: Entity) =
-          entity.get(attr.ident) map { case c: Iterable[Any] => c.toSet } getOrElse (Set.empty)
+          entity.get(attr.ident).map {
+            case c: Iterable[Any] =>
+              c.toSet
+            case _ => Set.empty[Any]
+          }.getOrElse(Set.empty[Any])
       }
     }
 

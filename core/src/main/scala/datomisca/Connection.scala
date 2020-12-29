@@ -195,7 +195,7 @@ class Connection(val connection: datomic.Connection) extends AnyVal {
 object Connection {
 
   private[datomisca] def bridgeDatomicFuture[T](listenF: ListenableFuture[T])(implicit ex: ExecutionContext): Future[T] = {
-    val p = Promise[T]
+    val p = Promise[T]()
 
     listenF.addListener(
       new java.lang.Runnable {

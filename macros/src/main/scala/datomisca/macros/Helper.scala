@@ -149,7 +149,7 @@ private[datomisca] class Helper[C <: Context](val c: C) {
        builder += q"${freshName}.put($keyT, $valT)"
     }
     builder += q"_root_.clojure.lang.PersistentArrayMap.create($freshName)"
-    q"{ ..${builder.result} }"
+    q"{ ..${builder.result()} }"
   }
 
 

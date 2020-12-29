@@ -282,7 +282,7 @@ trait FromDatomicImplicits {
       while (iter.hasNext) {
         builder += conv.from(iter.next())
       }
-      builder.result
+      builder.result()
     }
   }
 
@@ -293,7 +293,7 @@ trait FromDatomicImplicits {
       while (iter.hasNext) {
         builder += conv.from(iter.next())
       }
-      builder.result
+      builder.result()
     }
   }
 
@@ -480,7 +480,7 @@ trait ToDatomicImplicits {
     override def to(c: C) = {
       val builder = Seq.newBuilder[AnyRef]
       for (e <- c) builder += conv.to(e)
-      datomic.Util.list(builder.result: _*).asInstanceOf[ju.List[AnyRef]]
+      datomic.Util.list(builder.result(): _*).asInstanceOf[ju.List[AnyRef]]
     }
   }
 

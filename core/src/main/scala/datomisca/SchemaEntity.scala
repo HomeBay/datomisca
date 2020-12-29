@@ -69,7 +69,7 @@ object SchemaEntity {
       new PartialAddEntity(builder.result())
 
     def withId[T](id: T)(implicit ev: AsEntityId[T]): AddEntity =
-      new AddEntity(ev.conv(id), builder.result)
+      new AddEntity(ev.conv(id), builder.result())
   }
 
   def newBuilder: SchemaEntityBuilder = new SchemaEntityBuilder

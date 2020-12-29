@@ -76,14 +76,13 @@ private[datomisca] object MacroImpl {
     import c.universe._
 
     c.prefix.tree match {
-      case Literal(Constant(s: String)) =>
+      case pq"${s: String}" =>
         val edn = readEDN(c, s)
         validateCljRules(c, edn)
         val helper = new Helper[c.type](c)
         helper.literalQueryRules(helper.literalEDN(edn))
 
-      case Apply(_, List(a @ Apply(_, _))) =>
-        val q"scala.StringContext.apply(..$parts)" = a
+      case Apply(_, List(q"$expr.$fName(..$parts)")) =>
         val partsWithPlaceholders = q"""Seq(..$parts).mkString(" ! ")"""
         val strWithPlaceHolders = c.eval(c.Expr[String](c.untypecheck(partsWithPlaceholders.duplicate)))
         val edn = readEDN(c, strWithPlaceHolders)
@@ -93,7 +92,7 @@ private[datomisca] object MacroImpl {
         helper.literalQueryRules(helper.literalEDN(edn, argsStack))
 
       case t =>
-        abortWithMessage(c, s"cljRulesImple: Expected a string literal, but got ${t}")
+        abortWithMessage(c, s"cljRulesImpl: Expected a string literal, but got ${t}")
     }
   }
 
@@ -125,14 +124,13 @@ private[datomisca] object MacroImpl {
     import c.universe._
 
     c.prefix.tree match {
-      case Literal(Constant(s: String)) =>
+      case pq"${s: String}" =>
         val edn = readEDN(c, s)
         val (query, inputSize, outputSize) = validateDatalog(c, edn)
         val helper = new Helper[c.type](c)
         helper.literalQuery(helper.literalEDN(query), inputSize, outputSize)
 
-      case Apply(_, List(a @ Apply(_, _))) =>
-        val q"scala.StringContext.apply(..$parts)" = a
+      case Apply(_, List(q"$expr.$fName(..$parts)")) =>
         val partsWithPlaceholders = q"""Seq(..$parts).mkString(" ! ")"""
         val strWithPlaceHolders = c.eval(c.Expr[String](c.untypecheck(partsWithPlaceholders.duplicate)))
         val edn = readEDN(c, strWithPlaceHolders)
