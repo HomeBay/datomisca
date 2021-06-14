@@ -217,32 +217,32 @@ object MovieGraph {
 
       disp {
         println("Find the movie 'The Matrix'")
-        Datomic.q(MovieGraphQueries.queryFindMovieByTitle, Datomic.database, "The Matrix")
+        Datomic.q(MovieGraphQueries.queryFindMovieByTitle, Datomic.database(), "The Matrix")
       }
 
       disp {
         println("Find movies with titles that start with 'The Matrix'")
-        Datomic.q(MovieGraphQueries.queryFindMovieByTitlePrefix, Datomic.database, "The Matrix")
+        Datomic.q(MovieGraphQueries.queryFindMovieByTitlePrefix, Datomic.database(), "The Matrix")
       }
 
       disp {
         println("Find the actors in the movie 'Memento'")
-        Datomic.q(MovieGraphQueries.queryFindActorsInTitle, Datomic.database, "Memento")
+        Datomic.q(MovieGraphQueries.queryFindActorsInTitle, Datomic.database(), "Memento")
       }
 
       disp {
         println("Find the movie roles for actor 'Carrie-Ann Moss'")
-        Datomic.q(MovieGraphQueries.queryFindTitlesAndRolesForActor, Datomic.database, "Carrie-Ann Moss")
+        Datomic.q(MovieGraphQueries.queryFindTitlesAndRolesForActor, Datomic.database(), "Carrie-Ann Moss")
       }
 
       disp {
         println("Find the movies that included actors from 'The Matrix Reloaded'")
-        Datomic.q(MovieGraphQueries.queryFindMoviesThatIncludeActorsInGivenMovie, Datomic.database, "The Matrix Reloaded")
+        Datomic.q(MovieGraphQueries.queryFindMoviesThatIncludeActorsInGivenMovie, Datomic.database(), "The Matrix Reloaded")
       }
 
       disp {
         println("Find all the movies with a role called 'Agent Smith'")
-        Datomic.q(MovieGraphQueries.queryFindAllMoviesWithRole, Datomic.database, "Agent Smith")
+        Datomic.q(MovieGraphQueries.queryFindAllMoviesWithRole, Datomic.database(), "Agent Smith")
       }
     }
 

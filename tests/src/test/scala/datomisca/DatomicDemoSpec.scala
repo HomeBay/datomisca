@@ -106,10 +106,10 @@ class DatomicDemoSpec extends Specification {
                       [ ?e :person/age ?a ]
                       [ (<= ?a ?age) ]
             ]
-          """, Datomic.database, 40).map{
+          """, Datomic.database(), 40).map{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
-              val entity = Datomic.database.entity(id)
+              val entity = Datomic.database().entity(id)
               println(s"""entity: $id - name $name - characters ${entity.get(person/"character")}""")
               name -> age
           }
@@ -122,10 +122,10 @@ class DatomicDemoSpec extends Specification {
                       [ ?e :person/age ?a ]
                       [ (not= ?a ?age) ]
             ]
-          """, Datomic.database, 35).map{
+          """, Datomic.database(), 35).map{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
-              val entity = Datomic.database.entity(id)
+              val entity = Datomic.database().entity(id)
               println(s"""entity: $id - name $name - characters ${entity.get(person/"character")}""")
               name -> age
           }
@@ -138,10 +138,10 @@ class DatomicDemoSpec extends Specification {
                       [ ?e :person/age ?a ]
                       [ (== ?a ?age) ]
             ]
-          """, Datomic.database, 35L).map{
+          """, Datomic.database(), 35L).map{
             case (id: Long, name: String, age: Long) => 
               // can get entity there
-              val entity = Datomic.database.entity(id)
+              val entity = Datomic.database().entity(id)
               println(s"""entity: $id - name $name - characters ${entity.get(person/"character")}""")
               name -> age
           }

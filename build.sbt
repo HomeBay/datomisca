@@ -1,6 +1,6 @@
-organization in ThisBuild := "com.homebay"
-licenses in ThisBuild += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
-scalaVersion in ThisBuild := "2.13.4"
+ThisBuild / organization := "com.homebay"
+ThisBuild / licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
+ThisBuild / scalaVersion := "2.13.5"
 
 lazy val compilerOptions = Seq(
   "-deprecation",
@@ -42,7 +42,7 @@ lazy val tests = project.in(file("tests")).
       datomic,
       specs2
     ),
-    fork in Test := true,
+    Test / fork := true,
     publishArtifact := false
   ).
   dependsOn(macros, core)
@@ -57,7 +57,7 @@ lazy val integrationTests = project.in(file("integration")).
       scalatest,
       xmlModule
     ),
-    fork in IntegrationTest := true,
+    IntegrationTest / fork := true,
     publishArtifact := false
   ).
   dependsOn(macros, core).
@@ -69,7 +69,7 @@ lazy val core = project.in(file("core")).
     name := "datomisca-core",
     libraryDependencies += datomic,
     scalacOptions := compilerOptions,
-    (sourceGenerators in Compile) += ((sourceManaged in Compile) map Boilerplate.genCore).taskValue
+    Compile / sourceGenerators += ((Compile / sourceManaged) map Boilerplate.genCore).taskValue
   ).
   dependsOn(macros)
 
@@ -92,11 +92,11 @@ lazy val docs = project.in(file("docs")).
   settings(noPublishSettings).
   dependsOn(core, macros)
 
-mappings in (Compile, packageBin) ++= (mappings in (macros, Compile, packageBin)).value
-mappings in (Compile, packageSrc) ++= (mappings in (macros, Compile, packageSrc)).value
+Compile / packageBin / mappings ++= (macros / Compile / packageBin / mappings).value
+Compile / packageSrc / mappings ++= (macros / Compile / packageSrc / mappings).value
 
-mappings in (Compile, packageBin) ++= (mappings in (core, Compile, packageBin)).value
-mappings in (Compile, packageSrc) ++= (mappings in (core, Compile, packageSrc)).value
+Compile / packageBin / mappings ++= (core / Compile / packageBin / mappings).value
+Compile / packageSrc / mappings  ++= (core / Compile / packageSrc / mappings).value
 
 val noPublishSettings = Seq(
   publish := {},

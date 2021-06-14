@@ -48,7 +48,7 @@ class DatomicQuerySpec extends Specification {
     println("Deleted DB")
   }
 
-  override def map(fs: => Fragments) = step(startDB) ^ fs ^ step(stopDB)
+  override def map(fs: => Fragments) = step(startDB()) ^ fs ^ step(stopDB())
 
   "Datomic" should {
     "1 - pure query" in {
@@ -61,9 +61,9 @@ class DatomicQuerySpec extends Specification {
           :where  [ ?e :person/name ?n ]
                   [ ?e :person/character :person.character/violent ]
         ]
-      """, Datomic.database) map {
+      """, Datomic.database()) map {
         case (e: Long, n: String) =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           println(s"1 - entity: $e name: $n - e: ${entity.get(person / "character")}")
       }
 
@@ -77,9 +77,9 @@ class DatomicQuerySpec extends Specification {
       val q = query"""
         [:find ?e :where [?e :person/name]]
       """
-      Datomic.q(q, Datomic.database) map {
+      Datomic.q(q, Datomic.database()) map {
         case e: Long =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           println(s"2 - entity: $e name: ${entity.get(person / "name")} - e: ${entity.get(person / "character")}")
       }
 
@@ -96,9 +96,9 @@ class DatomicQuerySpec extends Specification {
          :in $$ [?names ...]
          :where [?e :person/name ?names]
         ]
-      """, Datomic.database, Seq("toto", "tata")) map {
+      """, Datomic.database(), Seq("toto", "tata")) map {
         case e: Long =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           println(s"3 - entity: $e name: ${entity.get(person / "name")} - e: ${entity.get(person / "character")}")
       }
 
@@ -117,7 +117,7 @@ class DatomicQuerySpec extends Specification {
         ]
       """
       Datomic.q(
-        q, Datomic.database,
+        q, Datomic.database(),
         Datomic.list(
           Datomic.list("toto", 30L),
           Datomic.list("tutu", 54L)
@@ -139,7 +139,7 @@ class DatomicQuerySpec extends Specification {
          :where [(fulltext $$ :person/name "toto") [[ ?e ?n ]]]
         ]
       """
-      Datomic.q(q, Datomic.database) map {
+      Datomic.q(q, Datomic.database()) map {
         case (e: Long, n: String) =>
           println(s"5 - entity: $e name: $n")
       }
@@ -165,7 +165,7 @@ class DatomicQuerySpec extends Specification {
         ]
       """
 
-      Datomic.q(q, Datomic.database, totoRule) map {
+      Datomic.q(q, Datomic.database(), totoRule) map {
         case (e: Long, age: Long) =>
           println(s"e: $e - age: $age")
           age must beEqualTo(30L)
@@ -186,7 +186,7 @@ class DatomicQuerySpec extends Specification {
         ]
       """
 
-      Datomic.q(q, Datomic.database) map {
+      Datomic.q(q, Datomic.database()) map {
         case (e: Long, name: String) =>
           println(s"e: $e - name: $name")
           name must beEqualTo("tutu")
@@ -202,9 +202,9 @@ class DatomicQuerySpec extends Specification {
       val q = query"""
         [:find ?e :where [?e :person/name]]
       """
-      Datomic.q(q, Datomic.database) map {
+      Datomic.q(q, Datomic.database()) map {
         case e: Long =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           println(s"12 - entity: $e name: ${entity.get(person / "name")} - e: ${entity.get(person / "character")}")
       }
 
@@ -254,9 +254,9 @@ class DatomicQuerySpec extends Specification {
           :where  [ ?e :person/name ?n ]
                   [ ?e :person/verified true ]
         ]
-      """, Datomic.database) map {
+      """, Datomic.database()) map {
         case (e: Long, n: String) =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           println(s"1 - entity: $e verified: ${entity.get(person / "verified")}")
       }
 

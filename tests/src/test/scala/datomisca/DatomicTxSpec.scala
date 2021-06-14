@@ -117,7 +117,7 @@ class DatomicTxSpec extends Specification {
     println("Deleted DB")
   }
 
-  override def map(fs: => Fragments) = step(startDB) ^ fs ^ step(stopDB)
+  override def map(fs: => Fragments) = step(startDB()) ^ fs ^ step(stopDB())
 
   "Datomic Entity Mappings" should {
     "1 - map simple entity" in {
@@ -160,9 +160,9 @@ class DatomicTxSpec extends Specification {
               :where [ ?e :person/friend ?f ]
                      [ ?f :person/name "toto" ]
             ]              
-          """, Datomic.database) map {
+          """, Datomic.database()) map {
             case e: Long =>
-              val entity = Datomic.database.entity(e)
+              val entity = Datomic.database().entity(e)
               val p @ Person(name, age) = DatomicMapping.fromEntity[Person](entity)
               println(s"Found person with name $name and age $age")
               p
@@ -221,9 +221,9 @@ class DatomicTxSpec extends Specification {
               :where [ ?e :person/friend ?f ]
                      [ ?f :person/name "toto" ]
             ]
-          """, Datomic.database) map {
+          """, Datomic.database()) map {
             case e: Long =>
-              val entity = Datomic.database.entity(e)
+              val entity = Datomic.database().entity(e)
               val Person(name, age) = DatomicMapping.fromEntity[Person](entity)
               println(s"2 Found person with name $name and age $age")
           }
@@ -307,7 +307,7 @@ class DatomicTxSpec extends Specification {
         println(s"2 Provisioned more data... TX: $tx")
         val txIds = tx.tempidMap
         println(s"4 totoId:${txIds(totoId)} medorId:${txIds(medorId)}")
-        val entity = Datomic.database.entity(txIds(totoId))
+        val entity = Datomic.database().entity(txIds(totoId))
         val PersonDog(name, age, dog) = DatomicMapping.fromEntity[PersonDog](entity)
         println(s"Found Toto $name $age $dog")
       }      
@@ -356,11 +356,11 @@ class DatomicTxSpec extends Specification {
         println(s"5 - Provisioned more data... TX: $tx")
         val txIds = tx.tempidMap
         println(s"5 - totoId:${txIds(totoId)} tutuId:${txIds(tutuId)}")
-        val entityToto = Datomic.database.entity(txIds(totoId))
+        val entityToto = Datomic.database().entity(txIds(totoId))
         val t1 = DatomicMapping.fromEntity[PersonLike](entityToto)
         println(s"5 - retrieved toto:$t")
         t1.toString must beEqualTo(PersonLike("toto", 30, Some("chocolate")).toString)
-        val entityTutu = Datomic.database.entity(txIds(tutuId))
+        val entityTutu = Datomic.database().entity(txIds(tutuId))
         val t2 = DatomicMapping.fromEntity[PersonLike](entityTutu)
         println(s"5 - retrieved tutu:$t")
         t2 must beEqualTo(tutu)
@@ -407,7 +407,7 @@ class DatomicTxSpec extends Specification {
         
         val realTotoId = tx.resolve(totoId)
         println(s"6 - totoId:$totoId")
-        val entity = Datomic.database.entity(realTotoId)
+        val entity = Datomic.database().entity(realTotoId)
         val t = DatomicMapping.fromEntity[PersonLikes](entity)
         println(s"5 - retrieved toto:$t")
         t must beEqualTo(PersonLikes("toto", 30, Set("chocolate", "vanilla")))
@@ -473,12 +473,12 @@ class DatomicTxSpec extends Specification {
         
         val Seq(realMedorId, realTotoId, realTutuId) = Seq(medorId, totoId, tutuId) map tx.resolve
         println(s"7 - totoId:$totoId medorId:$medorId")
-        val entityToto = Datomic.database.entity(realTotoId)
+        val entityToto = Datomic.database().entity(realTotoId)
         val t1 = DatomicMapping.fromEntity[PersonDogOpt](entityToto)
         println(s"7 - retrieved toto:$t")
         t1.toString must beEqualTo(PersonDogOpt("toto", 30, Some(IdView(DId(realMedorId))(medor))).toString)
 
-        val entityTutu = Datomic.database.entity(realTutuId)
+        val entityTutu = Datomic.database().entity(realTutuId)
         val t2 = DatomicMapping.fromEntity[PersonDogOpt](entityTutu)
         println(s"7 - retrieved tutu:$t")
         t2 must beEqualTo(tutu)
@@ -544,7 +544,7 @@ class DatomicTxSpec extends Specification {
         println(s"8 - Provisioned more data... TX: $tx")
         
         val Seq(realMedorId, realBrutusId, realTotoId) = Seq(medorId, brutusId, totoId) map tx.resolve
-        val entity = Datomic.database.entity(realTotoId)
+        val entity = Datomic.database().entity(realTotoId)
         val t = DatomicMapping.fromEntity[PersonDogList](entity)
         t must beEqualTo(PersonDogList("toto", 30, Set(IdView(DId(realMedorId))(medor), IdView(DId(realBrutusId))(brutus))))
       }      
@@ -573,9 +573,9 @@ class DatomicTxSpec extends Specification {
         )
       ) map { tx => 
         val id = tx.resolve(idToto)
-        Datomic.database.entity(id) !== beNull
+        Datomic.database().entity(id) !== beNull
         
-        Datomic.database.entity(1234L).keySet must beEmpty
+        Datomic.database().entity(1234L).keySet must beEmpty
         tx.resolveEntity(DId(Partition.USER)).keySet must beEmpty
       }
 
@@ -644,7 +644,7 @@ class DatomicTxSpec extends Specification {
 
       transactSync(toEntity(LookupRef(ColourPreference.email, "bob@rainbow.org"))(ColourPreference.Entity("robert@rainbow.com", "taupe")))
 
-      fromEntity(connection.database.entity(entityId)) must be_==(ColourPreference.Entity("robert@rainbow.com", "taupe"))
+      fromEntity(connection.database().entity(entityId)) must be_==(ColourPreference.Entity("robert@rainbow.com", "taupe"))
     }
 
     "13 - fetch an entity using it's lookup ref as id" in {
@@ -653,7 +653,7 @@ class DatomicTxSpec extends Specification {
       transactSync(ColourPreference.schema:_*)
       GIVEN_anEntity(ColourPreference.Entity("bob@rainbow.org", "grey"))
 
-      val fetchedEntity = fromEntity(connection.database.entity(LookupRef(ColourPreference.email, "bob@rainbow.org")))
+      val fetchedEntity = fromEntity(connection.database().entity(LookupRef(ColourPreference.email, "bob@rainbow.org")))
 
       fetchedEntity must be_==(ColourPreference.Entity("bob@rainbow.org", "grey"))
     }
@@ -667,7 +667,7 @@ class DatomicTxSpec extends Specification {
       val lookupRef: LookupRef = LookupRef(ColourPreference.email, "bob@rainbow.org")
       transactSync(SchemaFact.retract(lookupRef)(ColourPreference.favouriteColour -> "grey"))
 
-      connection.database.entity(entityId).get(ColourPreference.favouriteColour) must beNone
+      connection.database().entity(entityId).get(ColourPreference.favouriteColour) must beNone
     }
   }
 

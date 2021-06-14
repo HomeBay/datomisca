@@ -26,7 +26,7 @@ import org.specs2.mutable._
 import scala.concurrent._
 import ExecutionContext.Implicits.global
 import scala.concurrent.duration._
-
+import scala.language.implicitConversions
 
 class TupleMappingSpec extends Specification {
   sequential

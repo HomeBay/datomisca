@@ -20,7 +20,6 @@ import DatomicMapping._
 import Queries._
 
 import scala.language.reflectiveCalls
-
 import org.specs2.mutable._
 
 import scala.concurrent._
@@ -240,9 +239,9 @@ class DatomicMapping2Spec extends Specification {
               [ :find ?e 
                 :where [?e :person/name "toto"]
               ]
-            """, Datomic.database).head match {
+            """, Datomic.database()).head match {
               case e: Long =>
-                val entity = Datomic.database.entity(e)
+                val entity = Datomic.database().entity(e)
                 println(
                   "dentity age:" + entity.getAs[Long](person / "age") + 
                   " name:" + entity(person / "name") +
@@ -268,9 +267,9 @@ class DatomicMapping2Spec extends Specification {
         [ :find ?e 
           :where [?e :dog/name "medor"]
         ]
-      """, Datomic.database).head match {
+      """, Datomic.database()).head match {
         case e: Long =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           DatomicMapping.fromEntity[Dog](entity) must beEqualTo(medor.copy(id=Some(realMedorId)))
       }
 
@@ -278,9 +277,9 @@ class DatomicMapping2Spec extends Specification {
         [ :find ?e 
           :where [?e :person/name "toto"]
         ]
-      """, Datomic.database).head match {
+      """, Datomic.database()).head match {
         case e: Long =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           val realMedor = medor.copy(id=Some(realMedorId))
           val realDoggy1 = doggy1.copy(id=Some(realDoggy1Id))
           val realDoggy2 = doggy2.copy(id=Some(realDoggy2Id))
@@ -305,9 +304,9 @@ class DatomicMapping2Spec extends Specification {
         [ :find ?e 
           :where [?e :person/name "toto2"]
         ]
-      """, Datomic.database).head match {
+      """, Datomic.database()).head match {
         case e: Long =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
           DatomicMapping.fromEntity[Person3](entity) must beEqualTo(
             toto2.copy(
               id=realToto2Id
@@ -325,9 +324,9 @@ class DatomicMapping2Spec extends Specification {
         [ :find ?e 
           :where [?e :person/name "toto"]
         ]
-      """, Datomic.database).head match {
+      """, Datomic.database()).head match {
         case e: Long =>
-          val entity = Datomic.database.entity(e)
+          val entity = Datomic.database().entity(e)
 
           entity(PersonSchema.name) must beEqualTo("toto")
 
@@ -370,7 +369,7 @@ class DatomicMapping2Spec extends Specification {
 
       implicit val conn = Datomic.connect(uri)
 
-      val now = Instant.now()
+      val now = Instant.now().truncatedTo(ChronoUnit.SECONDS)
       val tomorrow = now.plus(1, ChronoUnit.DAYS)
       val dayAfterTomorrow = now.plus(1, ChronoUnit.DAYS)
       
@@ -416,8 +415,10 @@ class DatomicMapping2Spec extends Specification {
             val entity = db.entity(txReport.resolve(tempId))
             val info = DatomicMapping.fromEntity[DateInfo](entity)
 
-          // validate that the times came out correctly
-          (info.first === now) and (info.second === tomorrow) and (info.third === Some(dayAfterTomorrow)) 
+            // validate that the times came out correctly
+            info.first.truncatedTo(ChronoUnit.SECONDS) === now
+            info.second === tomorrow
+            info.third === Some(dayAfterTomorrow)
         }, Duration("2 seconds"))
     }
 

@@ -184,11 +184,11 @@ object Accounts {
     )
 
     val issuerId =
-      Datomic.q(findAccountByName, Datomic.database, "Issuer").head.asInstanceOf[Long]
+      Datomic.q(findAccountByName, Datomic.database(), "Issuer").head.asInstanceOf[Long]
     val bobId =
-      Datomic.q(findAccountByName, Datomic.database, "Bob").head.asInstanceOf[Long]
+      Datomic.q(findAccountByName, Datomic.database(), "Bob").head.asInstanceOf[Long]
     val aliceId =
-      Datomic.q(findAccountByName, Datomic.database, "Alice").head.asInstanceOf[Long]
+      Datomic.q(findAccountByName, Datomic.database(), "Alice").head.asInstanceOf[Long]
 
     Await.result(
       for {
@@ -203,13 +203,13 @@ object Accounts {
 
     val dumpAcc: (Any => Unit) = {
       case eid: Long =>
-        val entity = Datomic.database.entity(eid)
+        val entity = Datomic.database().entity(eid)
         println(entity.toMap)
     }
 
     val dumpTx: (Any => Unit) = {
       case eid: Long =>
-        val entity = Datomic.database.entity(eid)
+        val entity = Datomic.database().entity(eid)
         def getName(entity: Entity, kw: Keyword) =
           entity.as[Entity](kw).as[String](name.ident)
         println(
@@ -220,29 +220,29 @@ object Accounts {
     }
 
     println("All accounts")
-    Datomic.q(queryAccounts, Datomic.database) foreach dumpAcc
+    Datomic.q(queryAccounts, Datomic.database()) foreach dumpAcc
     println()
 
     println("All transactions")
-    Datomic.q(queryAllTransactions, Datomic.database) foreach dumpTx
+    Datomic.q(queryAllTransactions, Datomic.database()) foreach dumpTx
     println()
 
     println("Issuers's account")
     dumpAcc(issuerId)
     println("Issuers's transactions")
-    Datomic.q(queryAccountTransactions, Datomic.database, rulesParty, issuerId) foreach dumpTx
+    Datomic.q(queryAccountTransactions, Datomic.database(), rulesParty, issuerId) foreach dumpTx
     println()
 
     println("Bob's account")
     dumpAcc(bobId)
     println("Bob's transactions")
-    Datomic.q(queryAccountTransactions, Datomic.database, rulesParty, bobId) foreach dumpTx
+    Datomic.q(queryAccountTransactions, Datomic.database(), rulesParty, bobId) foreach dumpTx
     println()
 
     println("Alice's account")
     dumpAcc(aliceId)
     println("Alice's transactions")
-    Datomic.q(queryAccountTransactions, Datomic.database, rulesParty, aliceId) foreach dumpTx
+    Datomic.q(queryAccountTransactions, Datomic.database(), rulesParty, aliceId) foreach dumpTx
     println()
 
     try {

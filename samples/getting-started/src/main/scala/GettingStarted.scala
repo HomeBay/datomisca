@@ -167,7 +167,7 @@ object GettingStarted {
         """)
 
         // execute the query and sort the results by age
-        val results = Datomic.q(queryFindByName, Datomic.database, 32).toSeq sortBy (_._3.asInstanceOf[Long])
+        val results = Datomic.q(queryFindByName, Datomic.database(), 32).toSeq sortBy (_._3.asInstanceOf[Long])
 
         println(s"""Results:
         |${results.mkString("[\n  ", ",\n  ", "\n]")}
@@ -179,7 +179,7 @@ object GettingStarted {
           case (eid: Long, qname: String, qage: Long, qbirth: JDate) =>
 
             // load the entity by its entity id
-            val entity = Datomic.database.entity(eid)
+            val entity = Datomic.database().entity(eid)
 
             /*
              * get the value for the name attribute
