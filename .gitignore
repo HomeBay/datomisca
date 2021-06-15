@@ -30,4 +30,4 @@ Gemfile.lock
 .metals
 metals.sbt
 .bloop
-
+.bsp
