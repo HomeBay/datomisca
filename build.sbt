@@ -22,7 +22,7 @@ lazy val testCompilerOptions = Seq(
   "-feature"
 )
 
-resolvers in ThisBuild ++= Seq(
+ThisBuild / resolvers ++= Seq(
   "clojars"        at "https://clojars.org/repo",
   "my.datomic.com" at "https://my.datomic.com/repo"
 )
